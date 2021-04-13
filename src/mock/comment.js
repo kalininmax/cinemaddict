@@ -31,10 +31,10 @@ const generateComments = () => {
   return comments;
 };
 
-const comments = generateComments();
+const allComments = generateComments();
 
 const getCommentIds = () => {
-  return shuffleArray(comments).slice(0, getRandomNumber(1, 7)).map(({ id }) => id);
+  return shuffleArray(allComments).slice(0, getRandomNumber(1, 7)).map(({ id }) => id);
 };
 
-export { getCommentIds };
+export { getCommentIds, allComments };

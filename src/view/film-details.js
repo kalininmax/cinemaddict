@@ -1,4 +1,5 @@
 import { humanizeDate } from '../mock/utils';
+import { allComments } from '../mock/comment';
 
 const createFilmGenresTemplate = (genres) => {
   let template = '';
@@ -8,12 +9,18 @@ const createFilmGenresTemplate = (genres) => {
   return template;
 };
 
-const createFilmCommentsTemplate = (comments) => {
+const createFilmCommentsTemplate = (commentIds) => {
+  const filmComments = [];
+  commentIds.forEach((commentId) => {
+    filmComments.push(allComments.find(({ id }) => id === commentId));
+  });
+
+
   let template = '';
-  comments.forEach(({ author, comment, date, emoji }) => {
+  filmComments.forEach(({ author, comment, date, emotion }) => {
     template += `<li class="film-details__comment">
       <span class="film-details__comment-emoji">
-        <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">
+        <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
       </span>
       <div>
         <p class="film-details__comment-text">${comment}</p>
@@ -28,10 +35,10 @@ const createFilmCommentsTemplate = (comments) => {
   return template;
 };
 
-const createFilmDetailsTemplate = ({ film_info: { title, rating, poster, director, writers, actors, age_rating, runtime, genre, description, release: { date, release_country } }, comments }) => {
+const createFilmDetailsTemplate = ({ film_info: { title, rating, poster, director, writers, actors, age_rating, runtime, genre, description, release: { date, release_country } }, comments: commentIds }) => {
   const genresTemplate = createFilmGenresTemplate(genre);
   const releaseDate = humanizeDate(date);
-  const commentsTemplate = createFilmCommentsTemplate(comments);
+  const commentsTemplate = createFilmCommentsTemplate(commentIds);
 
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">

@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 const getRandomNumber = (min, max, afterComma = 0) => {
   if (min > max) [min, max] = [max, min];
   if (afterComma === 0) return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -16,8 +18,13 @@ const shuffleArray = (array) => {
   return array;
 };
 
+const humanizeDate = (date, template = 'D MMMM YYYY') => {
+  return dayjs(date).format(template);
+};
+
 export {
   getRandomNumber,
   getRandomElement,
-  shuffleArray
+  shuffleArray,
+  humanizeDate
 };

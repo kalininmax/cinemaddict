@@ -36,7 +36,20 @@ const generateDuration = () => {
   return `${getRandomNumber(DURATION.hours.min, DURATION.hours.max)}h ${getRandomNumber(DURATION.mins.min, DURATION.mins.max)}m`;
 };
 
+const generateWatchingDate = () => {
+  const isWatched = Boolean(getRandomNumber(0, 1));
+
+  if (!isWatched) {
+    return null;
+  }
+
+  const maxDaysGap = 30;
+  const daysGap = getRandomNumber(-maxDaysGap, maxDaysGap);
+  return dayjs().add(daysGap, 'day').toDate();
+};
+
 const generateFilm = (id) => {
+  const watchingDate = generateWatchingDate();
   return {
     id: id,
     comments: getCommentIds(),
@@ -58,7 +71,8 @@ const generateFilm = (id) => {
     },
     user_details: {
       watchlist: Boolean(getRandomNumber(0, 1)),
-      watched: Boolean(getRandomNumber(0, 1)),
+      watched: Boolean(watchingDate),
+      watching_date: watchingDate,
       favorite: Boolean(getRandomNumber(0, 1)),
     },
   };

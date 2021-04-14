@@ -11,15 +11,18 @@ import { createFilmDetailsTemplate } from './view/film-details';
 import { generateFilm } from './mock/film';
 import { allComments } from './mock/comment';
 import { generateFilter } from './mock/filter';
+import { generateStatistic } from './mock/statistic';
 
-const FILMS_COUNTER = 5;
+const FILMS_COUNT = 24;
+const FILMS_COUNT_PER_STEP = 5;
 const filmItems = [];
 
-for (let i = 0; i < FILMS_COUNTER; i++) {
+for (let i = 0; i < FILMS_COUNT; i++) {
   filmItems.push(generateFilm(i));
 }
 
 const filters = generateFilter(filmItems);
+const statistic = generateStatistic(filmItems);
 
 const render = (container, template, position = 'beforeend') => {
   container.insertAdjacentHTML(position, template);
@@ -39,13 +42,30 @@ const filmsElement = mainElement.querySelector('.films');
 const filmsListElement = filmsElement.querySelector('.films-list');
 const filmListContainerElement = filmsElement.querySelector('.films-list__container');
 
-render(filmsListElement, createShowMoreButtonTemplate());
+for (let i = 0; i < Math.min(filmItems.length, FILMS_COUNT_PER_STEP); i++) {
+  render(filmListContainerElement, createFilmCardTemplate(filmItems[i]));
+}
+
+if (filmItems.length > FILMS_COUNT_PER_STEP) {
+  let renderedFilmCount = FILMS_COUNT_PER_STEP;
+
+  render(filmsListElement, createShowMoreButtonTemplate());
+
+  const showMoreButton = filmsListElement.querySelector('.films-list__show-more');
+  showMoreButton.addEventListener('click', (evt) => {
+    evt.preventDefault();
+
+    filmItems
+      .slice(renderedFilmCount, renderedFilmCount + FILMS_COUNT_PER_STEP)
+      .forEach((film) => render(filmListContainerElement, createFilmCardTemplate(film)));
+    renderedFilmCount += FILMS_COUNT_PER_STEP;
+
+    if (renderedFilmCount >= filmItems.length) {
+      showMoreButton.remove();
+    }
+  });
+}
 render(filmsElement, createFilmsListExtraTemplate('Top rated'));
 render(filmsElement, createFilmsListExtraTemplate('Most commented'));
-render(mainElement, createStatisticTemplate());
-
-filmItems.forEach((film) => {
-  render(filmListContainerElement, createFilmCardTemplate(film));
-});
-
+render(mainElement, createStatisticTemplate(statistic));
 render(filmsElement, createFilmDetailsTemplate(filmItems[0], allComments));

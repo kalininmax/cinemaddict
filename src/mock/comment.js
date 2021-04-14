@@ -34,7 +34,7 @@ const generateComments = () => {
 const allComments = generateComments();
 
 const getCommentIds = () => {
-  return shuffleArray(allComments).slice(0, getRandomNumber(1, 7)).map(({ id }) => id);
+  return shuffleArray(allComments).slice(0, getRandomNumber(1, 5)).map(({ id }) => id);
 };
 
 export { getCommentIds, allComments };

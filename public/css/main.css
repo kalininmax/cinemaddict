@@ -1131,6 +1131,7 @@ button {
   margin-right: 30px;
   padding-bottom: 30px;
   cursor: pointer;
+  text-transform: capitalize;
 }
 
 .statistic__filters-label:hover {

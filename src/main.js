@@ -9,10 +9,17 @@ import { createStatisticTemplate } from './view/statistics';
 import { createFilmsListExtraTemplate } from './view/films-list-extra';
 import { createFilmDetailsTemplate } from './view/film-details';
 import { generateFilm } from './mock/film';
+import { allComments } from './mock/comment';
+import { generateFilter } from './mock/filter';
 
-const FILMS_COUNTER = 20;
+const FILMS_COUNTER = 5;
 const filmItems = [];
 
+for (let i = 0; i < FILMS_COUNTER; i++) {
+  filmItems.push(generateFilm(i));
+}
+
+const filters = generateFilter(filmItems);
 
 const render = (container, template, position = 'beforeend') => {
   container.insertAdjacentHTML(position, template);
@@ -22,12 +29,11 @@ const headerElement = document.querySelector('.header');
 const mainElement = document.querySelector('.main');
 const footerStats = document.querySelector('.footer__statistics');
 
-
 render(headerElement, createHeaderProfileTemplate());
-render(mainElement, createSiteMenuTemplate());
+render(mainElement, createSiteMenuTemplate(filters));
 render(mainElement, createSortTemplate());
 render(mainElement, createFilmsListTemplate());
-render(footerStats, createFooterStatisticsTemplate());
+render(footerStats, createFooterStatisticsTemplate(filmItems.length));
 
 const filmsElement = mainElement.querySelector('.films');
 const filmsListElement = filmsElement.querySelector('.films-list');
@@ -36,14 +42,10 @@ const filmListContainerElement = filmsElement.querySelector('.films-list__contai
 render(filmsListElement, createShowMoreButtonTemplate());
 render(filmsElement, createFilmsListExtraTemplate('Top rated'));
 render(filmsElement, createFilmsListExtraTemplate('Most commented'));
-
 render(mainElement, createStatisticTemplate());
-
-for (let i = 0; i < FILMS_COUNTER; i++) {
-  filmItems.push(generateFilm(i));
-}
 
 filmItems.forEach((film) => {
   render(filmListContainerElement, createFilmCardTemplate(film));
 });
-render(filmsElement, createFilmDetailsTemplate(filmItems[0]));
+
+render(filmsElement, createFilmDetailsTemplate(filmItems[0], allComments));

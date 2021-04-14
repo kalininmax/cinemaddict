@@ -44,7 +44,7 @@ const generateWatchingDate = () => {
   }
 
   const maxDaysGap = 30;
-  const daysGap = getRandomNumber(-maxDaysGap, maxDaysGap);
+  const daysGap = getRandomNumber(-maxDaysGap, 0);
   return dayjs().add(daysGap, 'day').toDate();
 };
 

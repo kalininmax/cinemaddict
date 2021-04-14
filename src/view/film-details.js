@@ -1,5 +1,4 @@
 import { humanizeDate } from '../mock/utils';
-import { allComments } from '../mock/comment';
 
 const createFilmGenresTemplate = (genres) => {
   let template = '';
@@ -9,12 +8,8 @@ const createFilmGenresTemplate = (genres) => {
   return template;
 };
 
-const createFilmCommentsTemplate = (commentIds) => {
-  const filmComments = [];
-  commentIds.forEach((commentId) => {
-    filmComments.push(allComments.find(({ id }) => id === commentId));
-  });
-
+const createFilmCommentsTemplate = (allComments, commentIds) => {
+  const filmComments = allComments.filter((comment) => commentIds.includes(comment.id));
 
   let template = '';
   filmComments.forEach(({ author, comment, date, emotion }) => {
@@ -35,12 +30,15 @@ const createFilmCommentsTemplate = (commentIds) => {
   return template;
 };
 
-const createFilmDetailsTemplate = ({ film_info: { title, rating, poster, director, writers, actors, age_rating, runtime, genre, description, release: { date, release_country } }, comments: commentIds }) => {
+const createFilmDetailsTemplate = ({ film_info: { title, rating, poster, director, writers, actors, age_rating, runtime, genre, description, release: { date, release_country } }, comments: commentIds, user_details: { watchlist, watched, favorite } }, allComments) => {
   const genresTemplate = createFilmGenresTemplate(genre);
   const releaseDate = humanizeDate(date);
-  const commentsTemplate = createFilmCommentsTemplate(commentIds);
+  const commentsTemplate = createFilmCommentsTemplate(allComments, commentIds);
+  const watchlistChecked = watchlist ? 'checked' : '';
+  const watchedChecked = watched ? 'checked' : '';
+  const favoriteChecked = favorite ? 'checked' : '';
 
-  return `<section class="film-details">
+  return `<section class="film-details visually-hidden">
     <form class="film-details__inner" action="" method="get">
       <div class="film-details__top-container">
         <div class="film-details__close">
@@ -103,13 +101,13 @@ const createFilmDetailsTemplate = ({ film_info: { title, rating, poster, directo
         </div>
 
         <section class="film-details__controls">
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${watchlistChecked}>
           <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${watchedChecked}>
           <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${favoriteChecked}>
           <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
         </section>
       </div>

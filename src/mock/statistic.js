@@ -4,16 +4,16 @@ const filmToStatisticFilterMap = {
   'all-time': (films) => films.filter(({ user_details: { watched } }) => watched),
   today: (films) => films
     .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watching_date } }) => watching_date > dayjs().set('hour', 0).set('minute', 0).set('second', 0)),
+    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().set('hour', 0).set('minute', 0).set('second', 0)),
   week: (films) => films
     .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watching_date } }) => watching_date > dayjs().subtract(7, 'day')),
+    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().subtract(7, 'day')),
   month: (films) => films
     .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watching_date } }) => watching_date > dayjs().subtract(30, 'day')),
+    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().subtract(30, 'day')),
   year: (films) => films
     .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watching_date } }) => watching_date > dayjs().subtract(365, 'day')),
+    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().subtract(365, 'day')),
 };
 
 const generateStatistic = (films) => {

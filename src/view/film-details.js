@@ -30,7 +30,7 @@ const createFilmCommentsTemplate = (allComments, commentIds) => {
   return template;
 };
 
-const createFilmDetailsTemplate = ({ film_info: { title, rating, poster, director, writers, actors, age_rating, runtime, genres, description, release: { date, country } }, comments: commentIds, user_details: { watchlist, watched, favorite } }, allComments) => {
+const createFilmDetailsTemplate = ({ film_info: { title, rating, poster, director, writers, actors, ageRating, runtime, genres, description, release: { date, country } }, comments: commentIds, user_details: { watchlist, watched, favorite } }, allComments) => {
   const genresTemplate = createFilmGenresTemplate(genres);
   const releaseDate = humanizeDate(date);
   const commentsTemplate = createFilmCommentsTemplate(allComments, commentIds);
@@ -48,7 +48,7 @@ const createFilmDetailsTemplate = ({ film_info: { title, rating, poster, directo
           <div class="film-details__poster">
             <img class="film-details__poster-img" src="${poster}" alt="">
 
-            <p class="film-details__age">${age_rating}</p>
+            <p class="film-details__age">${ageRating}</p>
           </div>
 
           <div class="film-details__info">

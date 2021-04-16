@@ -57,7 +57,7 @@ const generateFilm = (id) => {
       title: getRandomElement(TITLES),
       rating: getRandomNumber(RATING.min, RATING.max, 1),
       poster: getRandomElement(POSTERS),
-      age_rating: getRandomElement(AGE_RATING),
+      ageRating: getRandomElement(AGE_RATING),
       director: getRandomElement(DIRECTORS),
       writers: shuffleArray(WRITERS).slice(0, getRandomNumber(1, 3)),
       actors: shuffleArray(ACTORS).slice(0, getRandomNumber(2, 4)),
@@ -72,7 +72,7 @@ const generateFilm = (id) => {
     user_details: {
       watchlist: Boolean(getRandomNumber(0, 1)),
       watched: Boolean(watchingDate),
-      watching_date: watchingDate,
+      watchingDate: watchingDate,
       favorite: Boolean(getRandomNumber(0, 1)),
     },
   };

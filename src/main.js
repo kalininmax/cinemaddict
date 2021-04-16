@@ -14,6 +14,7 @@ import { generateFilter } from './mock/filter';
 import { generateStatistic } from './mock/statistic';
 
 const FILMS_COUNT = 24;
+const EXTRA_LIST_FILMS_COUNT = 2;
 const FILMS_COUNT_PER_STEP = 5;
 const filmItems = [];
 
@@ -65,7 +66,16 @@ if (filmItems.length > FILMS_COUNT_PER_STEP) {
     }
   });
 }
+
 render(filmsElement, createFilmsListExtraTemplate('Top rated'));
 render(filmsElement, createFilmsListExtraTemplate('Most commented'));
+const topRatedFilmsContainer = filmsElement.querySelector('#top-rated .films-list__container');
+const mostCommentedFilmsContainer = filmsElement.querySelector('#most-commented .films-list__container');
+for (let i = 0; i < EXTRA_LIST_FILMS_COUNT; i++) {
+  render(topRatedFilmsContainer, createFilmCardTemplate(filmItems[i]));
+}
+for (let i = 0; i < EXTRA_LIST_FILMS_COUNT; i++) {
+  render(mostCommentedFilmsContainer, createFilmCardTemplate(filmItems[i]));
+}
 render(mainElement, createStatisticTemplate(statistic));
 render(filmsElement, createFilmDetailsTemplate(filmItems[0], allComments));

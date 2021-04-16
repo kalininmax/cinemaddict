@@ -30,8 +30,8 @@ const createFilmCommentsTemplate = (allComments, commentIds) => {
   return template;
 };
 
-const createFilmDetailsTemplate = ({ film_info: { title, rating, poster, director, writers, actors, age_rating, runtime, genre, description, release: { date, release_country } }, comments: commentIds, user_details: { watchlist, watched, favorite } }, allComments) => {
-  const genresTemplate = createFilmGenresTemplate(genre);
+const createFilmDetailsTemplate = ({ film_info: { title, rating, poster, director, writers, actors, age_rating, runtime, genres, description, release: { date, country } }, comments: commentIds, user_details: { watchlist, watched, favorite } }, allComments) => {
+  const genresTemplate = createFilmGenresTemplate(genres);
   const releaseDate = humanizeDate(date);
   const commentsTemplate = createFilmCommentsTemplate(allComments, commentIds);
   const watchlistChecked = watchlist ? 'checked' : '';
@@ -86,7 +86,7 @@ const createFilmDetailsTemplate = ({ film_info: { title, rating, poster, directo
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
-                <td class="film-details__cell">${release_country}</td>
+                <td class="film-details__cell">${country}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>

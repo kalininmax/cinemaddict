@@ -1,6 +1,6 @@
 import { humanizeDate } from '../mock/utils';
 
-const createFilmCardTemplate = ({ film_info: { title, rating, poster, runtime, genre, description, release: { date } }, comments, user_details: { watchlist, watched, favorite } }) => {
+const createFilmCardTemplate = ({ film_info: { title, rating, poster, runtime, genres, description, release: { date } }, comments, user_details: { watchlist, watched, favorite } }) => {
   const watchlistClass = watchlist ? 'film-card__controls-item--active' : '';
   const watchedClass = watched ? 'film-card__controls-item--active' : '';
   const favoriteClass = favorite ? 'film-card__controls-item--active' : '';
@@ -12,7 +12,7 @@ const createFilmCardTemplate = ({ film_info: { title, rating, poster, runtime, g
     <p class="film-card__info">
       <span class="film-card__year">${releaseYear}</span>
       <span class="film-card__duration">${runtime}</span>
-      <span class="film-card__genre">${genre}</span>
+      <span class="film-card__genre">${genres}</span>
     </p>
     <img src="${poster}" alt="" class="film-card__poster">
     <p class="film-card__description">${description}</p>

@@ -24,7 +24,7 @@ const generateReleaseDate = () => {
   return dayjs().add(daysGap, 'day').year(year).toDate();
 };
 
-const generateGenre = () => {
+const generateGenres = () => {
   return shuffleArray(GENRES).slice(0, getRandomNumber(1, 2));
 };
 
@@ -63,10 +63,10 @@ const generateFilm = (id) => {
       actors: shuffleArray(ACTORS).slice(0, getRandomNumber(2, 4)),
       release: {
         date: generateReleaseDate(),
-        release_country: getRandomElement(COUNTRIES),
+        country: getRandomElement(COUNTRIES),
       },
       runtime: generateDuration(),
-      genre: generateGenre(),
+      genres: generateGenres(),
       description: generateDescription(),
     },
     user_details: {

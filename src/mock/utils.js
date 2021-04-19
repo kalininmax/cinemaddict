@@ -1,5 +1,10 @@
 import dayjs from 'dayjs';
 
+const RenderPosition = {
+  AFTERBEGIN: 'afterbegin',
+  BEFOREEND: 'beforeend',
+};
+
 const getRandomNumber = (min, max, afterComma = 0) => {
   if (min > max) [min, max] = [max, min];
   if (afterComma === 0) return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -22,9 +27,29 @@ const humanizeDate = (date, template = 'D MMMM YYYY') => {
   return dayjs(date).format(template);
 };
 
+const render = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
+const createElement = (template) => {
+  const newElement = document.createElement('div');
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};
+
 export {
   getRandomNumber,
   getRandomElement,
   shuffleArray,
-  humanizeDate
+  humanizeDate,
+  render,
+  createElement,
+  RenderPosition
 };

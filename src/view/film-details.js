@@ -1,4 +1,5 @@
-import { humanizeDate, createElement } from '../mock/utils';
+import AbstractView from './abstract';
+import { humanizeDate } from '../utils/film';
 import { EMOTIONS } from '../mock/comment';
 
 const createFilmGenresTemplate = (genres) => {
@@ -45,11 +46,12 @@ const createEmojiListTemplate = (emotions) => {
 };
 
 
-class FilmDetails {
+class FilmDetails extends AbstractView {
   constructor(film, allComments) {
+    super();
     this._film = film;
     this._allComments = allComments;
-    this._element = null;
+    this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -164,16 +166,14 @@ class FilmDetails {
     </section>`;
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _closeButtonClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.closeButtonClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setCloseButtonClickHandler(callback) {
+    this._callback.closeButtonClick = callback;
+    this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._closeButtonClickHandler);
   }
 }
 

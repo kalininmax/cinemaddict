@@ -1,10 +1,6 @@
-import { createElement } from '../mock/utils';
+import AbstractView from './abstract';
 
-class FilmsList {
-  constructor() {
-    this._element = null;
-  }
-
+class FilmsList extends AbstractView {
   getTemplate() {
     return `<section class="films">
       <section class="films-list">
@@ -12,18 +8,6 @@ class FilmsList {
         <div class="films-list__container"></div>
       </section>
     </section>`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

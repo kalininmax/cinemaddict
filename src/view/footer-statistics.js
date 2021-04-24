@@ -1,25 +1,13 @@
-import { createElement } from '../mock/utils';
+import AbstractView from './abstract';
 
-class FooterStatistic {
+class FooterStatistic extends AbstractView {
   constructor(filmsCount) {
+    super();
     this._filmsCount = filmsCount;
-    this._element = null;
   }
 
   getTemplate() {
     return `<p>${this._filmsCount} movies inside</p>`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

@@ -1,9 +1,11 @@
-import { humanizeDate, createElement } from '../mock/utils';
+import AbstractView from './abstract';
+import { humanizeDate } from '../utils/film';
 
-class FilmCard {
+class FilmCard extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
+    this._filmCardClickHandler = this._filmCardClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -34,16 +36,16 @@ class FilmCard {
     </article>`;
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _filmCardClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.filmCardClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setFilmCardClickHandler(callback) {
+    this._callback.filmCardClick = callback;
+    this.getElement().querySelector('.film-card__poster').addEventListener('click', this._filmCardClickHandler);
+    this.getElement().querySelector('.film-card__title').addEventListener('click', this._filmCardClickHandler);
+    this.getElement().querySelector('.film-card__comments').addEventListener('click', this._filmCardClickHandler);
   }
 }
 

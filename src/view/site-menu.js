@@ -1,9 +1,9 @@
-import { createElement } from '../mock/utils';
+import AbstractView from './abstract';
 
-class SiteMenu {
+class SiteMenu extends AbstractView {
   constructor(filters) {
+    super();
     this._filters = filters;
-    this._element = null;
   }
 
   getTemplate() {
@@ -11,8 +11,8 @@ class SiteMenu {
       if (name === 'all')
         return `<a href="#all" class="main-navigation__item ${isChecked ? 'main-navigation__item--active' : ''}">All movies</a>`;
 
-      return `<a href="#${name}" class="main-navigation__item ${isChecked ? 'main-navigation__item--active' : ''}">${name}
-          <span class="main-navigation__item-count">${count}</span></a>`;
+      return `<a href="#${name}" class="main-navigation__item ${isChecked ? 'main-navigation__item--active' : ''}">
+        ${name}<span class="main-navigation__item-count">${count}</span></a>`;
     };
     const filtersTemplate = this._filters.map((filter, index) => createFilterItemTemplate(filter, index === 0)).join('');
 
@@ -22,18 +22,6 @@ class SiteMenu {
       </div>
       <a href="#stats" class="main-navigation__additional">Stats</a>
     </nav>`;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

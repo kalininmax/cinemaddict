@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { getRandomNumber, getRandomElement, shuffleArray } from './utils';
+import { getRandomNumber, getRandomElement, shuffleArray } from '../utils/common';
 
 
 const USER_NAMES = ['Mark Matthews', 'Paul Skinner', 'John Webster', 'Leonard Bailey', 'Terence Bridges', 'Donald Oliver', 'James Hardy'];

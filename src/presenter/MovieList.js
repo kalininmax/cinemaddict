@@ -8,7 +8,7 @@ import FilmListExtraView from '../view/film-list-extra';
 import FilmCardView from '../view/film-card';
 import FilmDetailsView from '../view/film-details';
 import { allComments } from '../mock/comment';
-import { render, remove, RenderPosition } from '../utils/render';
+import { render, replace, remove, RenderPosition } from '../utils/render';
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRA_FILMS_COUNT = 2;
@@ -29,6 +29,8 @@ class MovieList {
     this._noFilmComponent = new NoFilmView();
     this._showMoreButtonComponent = new ShowMoreButtonView();
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
+    this._filmCardComponent = null;
+    this._filmDetailsComponent = null;
   }
 
   init(filmItems) {
@@ -48,19 +50,21 @@ class MovieList {
   }
 
   _renderFilm(film, container = this._filmListComponent) {
-    const filmCard = new FilmCardView(film);
-    const filmDetails = new FilmDetailsView(film, this._allComments);
+    const prevFilmCardComponent = this._filmCardComponent;
+    const prevFilmDetailsComponent = this._filmDetailsComponent;
+    this._filmCardComponent = new FilmCardView(film);
+    this._filmDetailsComponent = new FilmDetailsView(film, this._allComments);
     const filmCardContainer = container.getElement().querySelector('.films-list__container');
 
     const showDetails = () => {
-      render(document.body, filmDetails, RenderPosition.BEFOREEND);
+      render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
       document.body.classList.add('hide-overflow');
       document.addEventListener('keydown', onEscKeyDown);
-      filmDetails.setCloseButtonClickHandler(hideDetails);
+      this._filmDetailsComponent.setCloseButtonClickHandler(hideDetails);
     };
 
     const hideDetails = () => {
-      remove(filmDetails);
+      remove(this._filmDetailsComponent);
       document.body.classList.remove('hide-overflow');
     };
 
@@ -72,8 +76,27 @@ class MovieList {
       }
     };
 
-    filmCard.setFilmCardClickHandler(showDetails);
-    render(filmCardContainer, filmCard, RenderPosition.BEFOREEND);
+    this._filmCardComponent.setFilmCardClickHandler(showDetails);
+    if (prevFilmCardComponent === null || prevFilmDetailsComponent === null) {
+      render(filmCardContainer, this._filmCardComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (container.getElement().contains(prevFilmCardComponent.getElement())) {
+      replace(this._filmCardComponent, prevFilmCardComponent);
+    }
+
+    if (container.getElement().contains(prevFilmDetailsComponent.getElement())) {
+      replace(this._filmDetailsComponent, prevFilmDetailsComponent);
+    }
+
+    remove(prevFilmCardComponent);
+    remove(prevFilmDetailsComponent);
+  }
+
+  _destroyFilm() {
+    remove(this._filmCardComponent);
+    remove(this._filmDetailsComponent);
   }
 
   _renderFilms(from, to, container) {

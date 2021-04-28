@@ -5,9 +5,8 @@ import FilmListView from '../view/film-list';
 import NoFilmView from '../view/no-film';
 import ShowMoreButtonView from '../view/show-more-btn';
 import FilmListExtraView from '../view/film-list-extra';
-import FilmCardView from '../view/film-card';
-import FilmDetailsView from '../view/film-details';
-import { allComments } from '../mock/comment';
+import MoviePresenter from './movie';
+import { updateItem } from '../utils/common';
 import { render, replace, remove, RenderPosition } from '../utils/render';
 
 const FILMS_COUNT_PER_STEP = 5;
@@ -17,8 +16,8 @@ class MovieList {
   constructor(mainContainer, movieFilters) {
     this._mainContainer = mainContainer;
     this._movieFilters = movieFilters;
-    this._allComments = allComments;
     this._renderedFilmCount = FILMS_COUNT_PER_STEP;
+    this._moviePresenter = {};
 
     this._siteMenuComponent = new SiteMenuView(this._movieFilters);
     this._filmsComponent = new FilmsView();
@@ -28,9 +27,9 @@ class MovieList {
     this._mostCommentedFilmListComponent = new FilmListExtraView('Most commented');
     this._noFilmComponent = new NoFilmView();
     this._showMoreButtonComponent = new ShowMoreButtonView();
+
+    this._handleFilmChange = this._handleFilmChange.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
-    this._filmCardComponent = null;
-    this._filmDetailsComponent = null;
   }
 
   init(filmItems) {
@@ -39,6 +38,11 @@ class MovieList {
     render(this._filmsComponent, this._filmListComponent, RenderPosition.BEFOREEND);
 
     this._renderMovieList();
+  }
+
+  _handleFilmChange(updatedFilm) {
+    this._filmItems = updateItem(this._filmItems, updatedFilm);
+    this._moviePresenter[updatedFilm.id].init(updatedFilm);
   }
 
   _renderSiteMenu() {
@@ -50,48 +54,9 @@ class MovieList {
   }
 
   _renderFilm(film, container = this._filmListComponent) {
-    const prevFilmCardComponent = this._filmCardComponent;
-    const prevFilmDetailsComponent = this._filmDetailsComponent;
-    this._filmCardComponent = new FilmCardView(film);
-    this._filmDetailsComponent = new FilmDetailsView(film, this._allComments);
-    const filmCardContainer = container.getElement().querySelector('.films-list__container');
-
-    const showDetails = () => {
-      render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
-      document.body.classList.add('hide-overflow');
-      document.addEventListener('keydown', onEscKeyDown);
-      this._filmDetailsComponent.setCloseButtonClickHandler(hideDetails);
-    };
-
-    const hideDetails = () => {
-      remove(this._filmDetailsComponent);
-      document.body.classList.remove('hide-overflow');
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        hideDetails();
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
-
-    this._filmCardComponent.setFilmCardClickHandler(showDetails);
-    if (prevFilmCardComponent === null || prevFilmDetailsComponent === null) {
-      render(filmCardContainer, this._filmCardComponent, RenderPosition.BEFOREEND);
-      return;
-    }
-
-    if (container.getElement().contains(prevFilmCardComponent.getElement())) {
-      replace(this._filmCardComponent, prevFilmCardComponent);
-    }
-
-    if (container.getElement().contains(prevFilmDetailsComponent.getElement())) {
-      replace(this._filmDetailsComponent, prevFilmDetailsComponent);
-    }
-
-    remove(prevFilmCardComponent);
-    remove(prevFilmDetailsComponent);
+    const moviePresenter = new MoviePresenter(container, this._handleFilmChange);
+    moviePresenter.init(film);
+    this._moviePresenter[film.id] = moviePresenter;
   }
 
   _destroyFilm() {
@@ -120,6 +85,15 @@ class MovieList {
     render(this._filmListComponent, this._showMoreButtonComponent, RenderPosition.BEFOREEND);
 
     this._showMoreButtonComponent.setClickHandler(this._handleShowMoreButtonClick);
+  }
+
+  _clearMovieList() {
+    Object
+      .values(this._moviePresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._moviePresenter = {};
+    this._renderedFilmCount = FILMS_COUNT_PER_STEP;
+    remove(this._showMoreButtonComponent);
   }
 
   _renderFilmList() {

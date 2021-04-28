@@ -7,7 +7,7 @@ import ShowMoreButtonView from '../view/show-more-btn';
 import FilmListExtraView from '../view/film-list-extra';
 import MoviePresenter from './movie';
 import { updateItem } from '../utils/common';
-import { render, replace, remove, RenderPosition } from '../utils/render';
+import { render, remove, RenderPosition } from '../utils/render';
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRA_FILMS_COUNT = 2;

@@ -49,14 +49,14 @@ class Movie {
     remove(prevFilmDetailsComponent);
   }
 
-  _handleFavoriteClick() {
+  _handleWatchListClick() {
     this._changeData(
       Object.assign(
         {},
         this._film,
         {
           user_details: {
-            favorite: !this._film.user_details.favorite,
+            watchlist: !this._film.user_details.watchlist,
           },
         },
       ),
@@ -77,14 +77,14 @@ class Movie {
     );
   }
 
-  _handleWatchListClick() {
+  _handleFavoriteClick() {
     this._changeData(
       Object.assign(
         {},
         this._film,
         {
           user_details: {
-            watchlist: !this._film.user_details.watchlist,
+            favorite: !this._film.user_details.favorite,
           },
         },
       ),

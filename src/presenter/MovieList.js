@@ -43,6 +43,7 @@ class MovieList {
   _handleFilmChange(updatedFilm) {
     this._filmItems = updateItem(this._filmItems, updatedFilm);
     this._moviePresenter[updatedFilm.id].init(updatedFilm);
+    console.log(11, updatedFilm);
   }
 
   _renderSiteMenu() {

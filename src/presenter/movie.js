@@ -48,8 +48,9 @@ class Movie {
       replace(this._filmCardComponent, prevFilmCardComponent);
     }
 
-    if (this._filmListComponent.getElement().contains(prevFilmDetailsComponent.getElement())) {
+    if (document.body.contains(prevFilmDetailsComponent.getElement())) {
       replace(this._filmDetailsComponent, prevFilmDetailsComponent);
+      this._filmDetailsComponent.setCloseButtonClickHandler(this._hideDetails);
     }
 
     remove(prevFilmCardComponent);

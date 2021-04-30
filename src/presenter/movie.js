@@ -16,6 +16,9 @@ class Movie {
     this._showDetails = this._showDetails.bind(this);
     this._hideDetails = this._hideDetails.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._handleWatchListClick = this._handleWatchListClick.bind(this);
+    this._handleWatchedClick = this._handleWatchedClick.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
   init(film) {

@@ -59,6 +59,7 @@ class Movie {
         this._film,
         {
           user_details: {
+            ...this._film.user_details,
             watchlist: !this._film.user_details.watchlist,
           },
         },
@@ -73,6 +74,7 @@ class Movie {
         this._film,
         {
           user_details: {
+            ...this._film.user_details,
             watched: !this._film.user_details.watched,
           },
         },
@@ -87,6 +89,7 @@ class Movie {
         this._film,
         {
           user_details: {
+            ...this._film.user_details,
             favorite: !this._film.user_details.favorite,
           },
         },

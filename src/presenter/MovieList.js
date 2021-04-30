@@ -18,6 +18,8 @@ class MovieList {
     this._movieFilters = movieFilters;
     this._renderedFilmCount = FILMS_COUNT_PER_STEP;
     this._moviePresenter = {};
+    this._moviePresenterTopRated = {};
+    this._moviePresenterMostCommented = {};
 
     this._siteMenuComponent = new SiteMenuView(this._movieFilters);
     this._filmsComponent = new FilmsView();
@@ -43,7 +45,8 @@ class MovieList {
   _handleFilmChange(updatedFilm) {
     this._filmItems = updateItem(this._filmItems, updatedFilm);
     this._moviePresenter[updatedFilm.id].init(updatedFilm);
-    console.log(11, updatedFilm);
+    this._moviePresenterTopRated[updatedFilm.id].init(updatedFilm);
+    this._moviePresenterMostCommented[updatedFilm.id].init(updatedFilm);
   }
 
   _renderSiteMenu() {
@@ -57,7 +60,15 @@ class MovieList {
   _renderFilm(film, container = this._filmListComponent) {
     const moviePresenter = new MoviePresenter(container, this._handleFilmChange);
     moviePresenter.init(film);
-    this._moviePresenter[film.id] = moviePresenter;
+    if (container === this._filmListComponent) {
+      this._moviePresenter[film.id] = moviePresenter;
+    }
+    if (container === this._topRatedFilmListComponent) {
+      this._moviePresenterTopRated[film.id] = moviePresenter;
+    }
+    if (container === this._mostCommentedFilmListComponent) {
+      this._moviePresenterMostCommented[film.id] = moviePresenter;
+    }
   }
 
   _destroyFilm() {

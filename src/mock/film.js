@@ -48,7 +48,7 @@ const generateWatchingDate = () => {
   return dayjs().add(daysGap, 'day').toDate();
 };
 
-const generateFilm = (id) => {
+const generateFilm = () => {
   const watchingDate = generateWatchingDate();
   return {
     id: nanoid(),

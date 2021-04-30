@@ -30,14 +30,9 @@ class Movie {
     this._filmCardComponent = new FilmCardView(film);
     this._filmDetailsComponent = new FilmDetailsView(film, this._allComments);
 
-    this._filmCardComponent.setFilmCardClickHandler(this._showDetails);
-    this._filmCardComponent.setWatchListClickHandler(this._handleWatchListClick);
-    this._filmCardComponent.setWatchedClickHandler(this._handleWatchedClick);
-    this._filmCardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._setFilmCardClickHandlers();
+    this._setFilmDetailsClickHandlers();
 
-    this._filmDetailsComponent.setWatchListClickHandler(this._handleWatchListClick);
-    this._filmDetailsComponent.setWatchedClickHandler(this._handleWatchedClick);
-    this._filmDetailsComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     if (prevFilmCardComponent === null || prevFilmDetailsComponent === null) {
       render(this._filmListContainer, this._filmCardComponent, RenderPosition.BEFOREEND);
@@ -50,11 +45,24 @@ class Movie {
 
     if (document.body.contains(prevFilmDetailsComponent.getElement())) {
       replace(this._filmDetailsComponent, prevFilmDetailsComponent);
-      this._filmDetailsComponent.setCloseButtonClickHandler(this._hideDetails);
     }
 
     remove(prevFilmCardComponent);
     remove(prevFilmDetailsComponent);
+  }
+
+  _setFilmCardClickHandlers() {
+    this._filmCardComponent.setFilmCardClickHandler(this._showDetails);
+    this._filmCardComponent.setWatchListClickHandler(this._handleWatchListClick);
+    this._filmCardComponent.setWatchedClickHandler(this._handleWatchedClick);
+    this._filmCardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+  }
+
+  _setFilmDetailsClickHandlers() {
+    this._filmDetailsComponent.setWatchListClickHandler(this._handleWatchListClick);
+    this._filmDetailsComponent.setWatchedClickHandler(this._handleWatchedClick);
+    this._filmDetailsComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._filmDetailsComponent.setCloseButtonClickHandler(this._hideDetails);
   }
 
   _handleWatchListClick() {
@@ -111,7 +119,7 @@ class Movie {
     render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this._onEscKeyDown);
-    this._filmDetailsComponent.setCloseButtonClickHandler(this._hideDetails);
+    this._setFilmDetailsClickHandlers();
   }
 
   _hideDetails() {

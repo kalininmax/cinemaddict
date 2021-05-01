@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 import { getRandomNumber, getRandomElement, shuffleArray } from '../utils/common';
 import { getCommentIds } from './comment';
 
@@ -47,10 +48,10 @@ const generateWatchingDate = () => {
   return dayjs().add(daysGap, 'day').toDate();
 };
 
-const generateFilm = (id) => {
+const generateFilm = () => {
   const watchingDate = generateWatchingDate();
   return {
-    id: id,
+    id: nanoid(),
     comments: getCommentIds(),
     film_info: {
       title: getRandomElement(TITLES),

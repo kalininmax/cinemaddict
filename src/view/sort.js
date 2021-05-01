@@ -16,10 +16,33 @@ class Sort extends AbstractView {
   }
 
   _sortTypeChangeHandler(evt) {
-    if (evt.target.tagName !== 'A') return;
+    if (evt.target.tagName !== 'A') {
+      return;
+    }
+
+    this.getElement().querySelectorAll('.sort__button').forEach((button) => {
+      button.classList.remove('sort__button--active');
+    });
 
     evt.preventDefault();
     this._callback.sortTypeChange(evt.target.dataset.sortType);
+    evt.target.classList.add('sort__button--active');
+    switch (evt.target.dataset.sortType) {
+      case SortType.DATE_DOWN:
+        evt.target.dataset.sortType = SortType.DATE_UP;
+        break;
+      case SortType.DATE_UP:
+        evt.target.dataset.sortType = SortType.DATE_DOWN;
+        break;
+      case SortType.RATING_DOWN:
+        evt.target.dataset.sortType = SortType.RATING_UP;
+        break;
+      case SortType.RATING_UP:
+        evt.target.dataset.sortType = SortType.RATING_DOWN;
+        break;
+      default:
+        break;
+    }
   }
 
   setSortTypeChangeHandler(callback) {

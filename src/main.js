@@ -1,6 +1,6 @@
 import HeaderProfileView from './view/header-profile';
 import FooterStatisticView from './view/footer-statistics';
-import MoviePresenter from './presenter/MovieList';
+import MoviePresenter from './presenter/movie-list';
 import { generateFilm } from './mock/film';
 import { generateFilter } from './mock/filter';
 import { render, RenderPosition } from './utils/render';

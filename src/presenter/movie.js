@@ -63,6 +63,7 @@ class Movie {
     this._filmDetailsComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmDetailsComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmDetailsComponent.setCloseButtonClickHandler(this._hideDetails);
+    this._filmDetailsComponent.setEmojiCheckHandler();
   }
 
   _handleWatchListClick() {

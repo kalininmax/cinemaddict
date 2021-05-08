@@ -1,5 +1,8 @@
-import AbstractView from './abstract';
+import { nanoid } from 'nanoid';
+import dayjs from 'dayjs';
+import SmartView from './smart';
 import { humanizeDate, getHourFromMin } from '../utils/film';
+import { render, createElement, RenderPosition } from '../utils/render';
 import { EMOTIONS } from '../mock/comment';
 
 const createFilmGenresTemplate = (genres) => {
@@ -45,8 +48,7 @@ const createEmojiListTemplate = (emotions) => {
   return `<div class="film-details__emoji-list">${template}</div>`;
 };
 
-
-class FilmDetails extends AbstractView {
+class FilmDetails extends SmartView {
   constructor(film, allComments) {
     super();
     this._film = film;
@@ -55,6 +57,10 @@ class FilmDetails extends AbstractView {
     this._watchListClickHandler = this._watchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._emojiCheckHandler = this._emojiCheckHandler.bind(this);
+    this._commentInputHandler = this._commentInputHandler.bind(this);
+    this._commentSubmitHandler = this._commentSubmitHandler.bind(this);
+    this._setInnerHandlers();
   }
 
   getTemplate() {
@@ -167,6 +173,65 @@ class FilmDetails extends AbstractView {
         </div>
       </form>
     </section>`;
+  }
+
+  _commentInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      id: nanoid(),
+      author: 'MyUserName',
+      comment: evt.target.value,
+      date: humanizeDate(dayjs()),
+    }, true);
+  }
+
+  _commentSubmitHandler() {
+
+    // добавить объект коммента в массив всех комментов
+    // добавить id коммента в массив с комментами фильма
+
+  }
+
+  setCommentHandlers() {
+    document.addEventListener('keyup', (evt) => {
+      evt.preventDefault();
+      if (evt.ctrlKey && evt.code === 'Enter') {
+        // че-то там че-то
+      }
+    });
+  }
+
+  _setInnerHandlers() {
+    this.getElement().querySelector('.film-details__comment-input').addEventListener('input', this._commentInputHandler);
+  }
+
+  _emojiCheckHandler(evt) {
+    evt.preventDefault();
+
+    this.updateData({
+      emotion: `${evt.target.value}`,
+    }, true);
+
+    const container = this.getElement().querySelector('.film-details__add-emoji-label');
+    if (container.querySelector('img')) {
+      const emojiImage = this.getElement().querySelector('.film-details__add-emoji-label img');
+      emojiImage.src = `images/emoji/${evt.target.value}.png`;
+      emojiImage.alt = `emoji-${evt.target.value}`;
+    } else {
+      const element = createElement(`<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`);
+      render(container, element, RenderPosition.BEFOREEND);
+    }
+  }
+
+  setEmojiCheckHandler() {
+    this.getElement().querySelector('.film-details__emoji-list').addEventListener('input', this._emojiCheckHandler);
+  }
+
+  restoreHandlers() {
+    this.setCloseButtonClickHandler(this._callback.closeButtonClick);
+    this.setWatchListClickHandler(this._callback.watchListClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
   }
 
   _closeButtonClickHandler(evt) {

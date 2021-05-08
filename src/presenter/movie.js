@@ -33,7 +33,6 @@ class Movie {
     this._setFilmCardClickHandlers();
     this._setFilmDetailsClickHandlers();
 
-
     if (prevFilmCardComponent === null || prevFilmDetailsComponent === null) {
       render(this._filmListContainer, this._filmCardComponent, RenderPosition.BEFOREEND);
       return;
@@ -63,6 +62,7 @@ class Movie {
     this._filmDetailsComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmDetailsComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmDetailsComponent.setCloseButtonClickHandler(this._hideDetails);
+    this._filmDetailsComponent.setEmojiCheckHandler();
   }
 
   _handleWatchListClick() {
@@ -120,6 +120,7 @@ class Movie {
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this._onEscKeyDown);
     this._setFilmDetailsClickHandlers();
+    this._filmDetailsComponent.setCommentHandlers();
   }
 
   _hideDetails() {

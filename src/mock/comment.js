@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 import { getRandomNumber, getRandomElement, shuffleArray } from '../utils/common';
 
 
@@ -13,9 +14,9 @@ const generateDate = () => {
   return dayjs().add(daysGap, 'day').toDate();
 };
 
-const generateComment = (id) => {
+const generateComment = () => {
   return {
-    id: id,
+    id: nanoid(),
     author: getRandomElement(USER_NAMES),
     comment: getRandomElement(COMMENTS),
     date: generateDate(),
@@ -26,7 +27,7 @@ const generateComment = (id) => {
 const generateComments = () => {
   const comments = [];
   for (let i = 0; i < COMMENTS_COUNTER; i++) {
-    comments.push(generateComment(i));
+    comments.push(generateComment());
   }
   return comments;
 };

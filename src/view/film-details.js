@@ -24,7 +24,7 @@ const createFilmCommentsTemplate = (allComments, commentIds) => {
         <p class="film-details__comment-text">${comment}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">${humanizeDate(date)}</span>
+          <span class="film-details__comment-day">${humanizeDate(date, 'relative')}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>

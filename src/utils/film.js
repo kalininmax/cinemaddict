@@ -11,6 +11,15 @@ const humanizeDate = (date, template = 'D MMMM YYYY') => {
   return dayjs(date).format(template);
 };
 
+const getHourFromMin = (mins) => {
+  const hours = Math.trunc(mins / 60);
+  const minutes = mins % 60;
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`;
+  }
+  return `${minutes}m`;
+};
+
 const getWeightForNullDate = (dateA, dateB) => {
   if (dateA === null && dateB === null) {
     return 0;
@@ -65,6 +74,7 @@ const sortFilmRatingDown = (filmA, filmB) => {
 
 export {
   humanizeDate,
+  getHourFromMin,
   sortFilmDateUp,
   sortFilmDateDown,
   sortFilmRatingUp,

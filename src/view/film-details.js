@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import { humanizeDate } from '../utils/film';
+import { humanizeDate, getHourFromMin } from '../utils/film';
 import { EMOTIONS } from '../mock/comment';
 
 const createFilmGenresTemplate = (genres) => {
@@ -111,7 +111,7 @@ class FilmDetails extends AbstractView {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${runtime}</td>
+                  <td class="film-details__cell">${getHourFromMin(runtime)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>

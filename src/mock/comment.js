@@ -9,7 +9,7 @@ const COMMENTS_COUNTER = 30;
 
 const generateDate = () => {
   const maxDaysGap = 20;
-  const daysGap = getRandomNumber(-maxDaysGap, maxDaysGap);
+  const daysGap = getRandomNumber(-maxDaysGap, 0);
   return dayjs().add(daysGap, 'day').toDate();
 };
 

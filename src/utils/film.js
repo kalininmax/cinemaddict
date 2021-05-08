@@ -1,6 +1,13 @@
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
 
 const humanizeDate = (date, template = 'D MMMM YYYY') => {
+  if (template === 'relative') {
+    return dayjs().to(date);
+  }
+
   return dayjs(date).format(template);
 };
 

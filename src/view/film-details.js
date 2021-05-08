@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid';
+import dayjs from 'dayjs';
 import SmartView from './smart';
 import { humanizeDate } from '../utils/film';
 import { render, createElement, RenderPosition } from '../utils/render';
@@ -25,7 +27,7 @@ const createFilmCommentsTemplate = (allComments, commentIds) => {
         <p class="film-details__comment-text">${comment}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">${humanizeDate(date)}</span>
+          <span class="film-details__comment-day">${humanizeDate(date, 'YYYY/MM/D HH:MM')}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
@@ -56,6 +58,9 @@ class FilmDetails extends SmartView {
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._emojiCheckHandler = this._emojiCheckHandler.bind(this);
+    this._commentInputHandler = this._commentInputHandler.bind(this);
+    this._commentSubmitHandler = this._commentSubmitHandler.bind(this);
+    this._setInnerHandlers();
   }
 
   getTemplate() {
@@ -170,7 +175,43 @@ class FilmDetails extends SmartView {
     </section>`;
   }
 
+  _commentInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      id: nanoid(),
+      author: 'MyUserName',
+      comment: evt.target.value,
+      date: humanizeDate(dayjs()),
+    }, true);
+  }
+
+  _commentSubmitHandler() {
+
+    // добавить объект коммента в массив всех комментов
+    // добавить id коммента в массив с комментами фильма
+
+  }
+
+  setCommentHandlers() {
+    document.addEventListener('keyup', (evt) => {
+      evt.preventDefault();
+      if (evt.ctrlKey && evt.code === 'Enter') {
+        // че-то там че-то
+      }
+    });
+  }
+
+  _setInnerHandlers() {
+    this.getElement().querySelector('.film-details__comment-input').addEventListener('input', this._commentInputHandler);
+  }
+
   _emojiCheckHandler(evt) {
+    evt.preventDefault();
+
+    this.updateData({
+      emotion: `${evt.target.value}`,
+    }, true);
+
     const container = this.getElement().querySelector('.film-details__add-emoji-label');
     if (container.querySelector('img')) {
       const emojiImage = this.getElement().querySelector('.film-details__add-emoji-label img');

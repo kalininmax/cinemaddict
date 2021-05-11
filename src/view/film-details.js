@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import dayjs from 'dayjs';
 import SmartView from './smart';
-import { humanizeDate } from '../utils/film';
+import { humanizeDate, getHourFromMin } from '../utils/film';
 import { render, createElement, RenderPosition } from '../utils/render';
 import { EMOTIONS } from '../mock/comment';
 
@@ -27,7 +27,7 @@ const createFilmCommentsTemplate = (allComments, commentIds) => {
         <p class="film-details__comment-text">${comment}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">${humanizeDate(date, 'YYYY/MM/D HH:MM')}</span>
+          <span class="film-details__comment-day">${humanizeDate(date, 'relative')}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
@@ -117,7 +117,7 @@ class FilmDetails extends SmartView {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${runtime}</td>
+                  <td class="film-details__cell">${getHourFromMin(runtime)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>

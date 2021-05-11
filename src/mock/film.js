@@ -13,10 +13,7 @@ const DIRECTORS = ['Stanley Kubrick', 'Alfred Hitchcock', 'Akira Kurosawa', 'Ste
 const WRITERS = ['Quentin Tarantino', 'William Goldman', 'Charlie Kaufman', 'Woody Allen', 'Nora Ephron', 'Ernest Lehman', 'Oliver Stone'];
 const ACTORS = ['Cary Grant', 'Marlon Brando', 'James Stewart', 'Marilyn Monroe', 'Charlie Chaplin', 'Gene Kelly', 'Sophia Loren'];
 const COUNTRIES = ['USA', 'Canada', 'France', 'Germany', 'Russia'];
-const DURATION = {
-  hours: { min: 1, max: 3 },
-  mins: { min: 0, max: 59 },
-};
+const DURATION = { min: 30, max: 180 };
 
 const generateReleaseDate = () => {
   const daysGap = getRandomNumber(-15, 15);
@@ -33,7 +30,7 @@ const generateDescription = () => {
 };
 
 const generateDuration = () => {
-  return `${getRandomNumber(DURATION.hours.min, DURATION.hours.max)}h ${getRandomNumber(DURATION.mins.min, DURATION.mins.max)}m`;
+  return getRandomNumber(DURATION.min, DURATION.max);
 };
 
 const generateWatchingDate = () => {

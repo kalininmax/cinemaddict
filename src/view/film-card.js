@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import { humanizeDate } from '../utils/film';
+import { humanizeDate, getHourFromMin } from '../utils/film';
 const MAX_DESCRIPTION_LENGTH = 140;
 
 const cutDesctiption = (description) => {
@@ -33,7 +33,7 @@ class FilmCard extends AbstractView {
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${releaseYear}</span>
-        <span class="film-card__duration">${runtime}</span>
+        <span class="film-card__duration">${getHourFromMin(runtime)}</span>
         <span class="film-card__genre">${genres}</span>
       </p>
       <img src="${poster}" alt="" class="film-card__poster">

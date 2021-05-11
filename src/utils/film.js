@@ -1,7 +1,23 @@
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
 
 const humanizeDate = (date, template = 'D MMMM YYYY') => {
+  if (template === 'relative') {
+    return dayjs().to(date);
+  }
+
   return dayjs(date).format(template);
+};
+
+const getHourFromMin = (mins) => {
+  const hours = Math.trunc(mins / 60);
+  const minutes = mins % 60;
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`;
+  }
+  return `${minutes}m`;
 };
 
 const getWeightForNullDate = (dateA, dateB) => {
@@ -58,6 +74,7 @@ const sortFilmRatingDown = (filmA, filmB) => {
 
 export {
   humanizeDate,
+  getHourFromMin,
   sortFilmDateUp,
   sortFilmDateDown,
   sortFilmRatingUp,

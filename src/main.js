@@ -27,5 +27,4 @@ render(headerElement, new HeaderProfileView(), RenderPosition.BEFOREEND);
 render(footerStats, new FooterStatisticView(films.length), RenderPosition.BEFOREEND);
 
 const moviePresenter = new MoviePresenter(mainElement, moviesModel, commentsModel, filters);
-
-moviePresenter.init(films);
+moviePresenter.init();

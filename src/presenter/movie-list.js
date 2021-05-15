@@ -15,7 +15,9 @@ const FILMS_COUNT_PER_STEP = 5;
 const EXTRA_FILMS_COUNT = 2;
 
 class MovieList {
-  constructor(mainContainer, movieFilters) {
+  constructor(mainContainer, moviesModel, commentsModel, movieFilters) {
+    this._moviesModel = moviesModel;
+    this._commentsModel = commentsModel;
     this._mainContainer = mainContainer;
     this._movieFilters = movieFilters;
     this._renderedFilmCount = FILMS_COUNT_PER_STEP;
@@ -46,6 +48,14 @@ class MovieList {
     render(this._filmsComponent, this._filmListComponent, RenderPosition.BEFOREEND);
 
     this._renderMovieList();
+  }
+
+  _getMovies() {
+    return this._moviesModel.getMovies();
+  }
+
+  _getComments() {
+    return this._commentsModel.getComments();
   }
 
   _handleFilmChange(updatedFilm) {

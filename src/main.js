@@ -1,5 +1,5 @@
 import { generateFilm } from './mock/film';
-import { allComments } from '../mock/comment';
+import { allComments } from './mock/comment';
 import { generateFilter } from './mock/filter';
 import { render, RenderPosition } from './utils/render';
 import HeaderProfileView from './view/header-profile';

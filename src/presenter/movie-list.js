@@ -40,9 +40,6 @@ class MovieList {
   }
 
   init() {
-    //this._filmItems = filmItems.slice();
-    //this._sourcedFilmItems = filmItems.slice();
-
     render(this._mainContainer, this._filmsComponent, RenderPosition.BEFOREEND);
     render(this._filmsComponent, this._filmListComponent, RenderPosition.BEFOREEND);
 
@@ -68,8 +65,6 @@ class MovieList {
   }
 
   _handleFilmChange(updatedFilm) {
-    //this._filmItems = updateItem(this._filmItems, updatedFilm);
-    //this._sourcedFilmItems = updateItem(this._sourcedFilmItems, updatedFilm);
     this._moviePresenter[updatedFilm.id].init(updatedFilm);
     this._moviePresenterTopRated[updatedFilm.id].init(updatedFilm);
     this._moviePresenterMostCommented[updatedFilm.id].init(updatedFilm);

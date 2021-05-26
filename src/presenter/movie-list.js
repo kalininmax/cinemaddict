@@ -1,4 +1,3 @@
-import SiteMenuView from '../view/site-menu';
 import SortView from '../view/sort';
 import FilmsView from '../view/films';
 import FilmListView from '../view/film-list';
@@ -8,24 +7,24 @@ import FilmListExtraView from '../view/film-list-extra';
 import MoviePresenter from './movie';
 import { render, remove, RenderPosition } from '../utils/render';
 import { sortFilmDateDown, sortFilmDateUp, sortFilmRatingDown, sortFilmRatingUp } from '../utils/film';
+import { filter } from '../utils/filter';
 import { SortType, UserAction, UpdateType } from '../const';
 
 const FILMS_COUNT_PER_STEP = 5;
 // const EXTRA_FILMS_COUNT = 2;
 
 class MovieList {
-  constructor(mainContainer, moviesModel, movieFilters, commentsModel) {
+  constructor(mainContainer, moviesModel, commentsModel, filterModel) {
     this._moviesModel = moviesModel;
     this._commentsModel = commentsModel;
+    this._filterModel = filterModel;
     this._mainContainer = mainContainer;
-    this._movieFilters = movieFilters;
     this._renderedFilmCount = FILMS_COUNT_PER_STEP;
     this._moviePresenter = {};
     this._moviePresenterTopRated = {};
     this._moviePresenterMostCommented = {};
     this._currentSortType = SortType.DEFAULT;
 
-    this._siteMenuComponent = new SiteMenuView(this._movieFilters);
     this._filmsComponent = new FilmsView();
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
@@ -41,6 +40,7 @@ class MovieList {
 
     this._moviesModel.addObserver(this._handleModelEvent);
     this._commentsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -51,17 +51,21 @@ class MovieList {
   }
 
   _getMovies() {
+    const filterType = this._filterModel.getFilter();
+    const films = this._moviesModel.getMovies();
+    const filtredMovies = filter[filterType](films);
+
     switch (this._currentSortType) {
       case SortType.DATE_DOWN:
-        return this._moviesModel.getMovies().slice().sort(sortFilmDateDown);
+        return filtredMovies.sort(sortFilmDateDown);
       case SortType.DATE_UP:
-        return this._moviesModel.getMovies().slice().sort(sortFilmDateUp);
+        return filtredMovies.sort(sortFilmDateUp);
       case SortType.RATING_DOWN:
-        return this._moviesModel.getMovies().slice().sort(sortFilmRatingDown);
+        return filtredMovies.sort(sortFilmRatingDown);
       case SortType.RATING_UP:
-        return this._moviesModel.getMovies().slice().sort(sortFilmRatingUp);
+        return filtredMovies.sort(sortFilmRatingUp);
     }
-    return this._moviesModel.getMovies();
+    return filtredMovies;
   }
 
   _getComments() {
@@ -108,10 +112,6 @@ class MovieList {
     // - обновить часть списка (например, когда поменялось описание)
     // - обновить список (например, когда задача ушла в архив)
     // - обновить всю доску (например, при переключении фильтра)
-  }
-
-  _renderSiteMenu() {
-    render(this._mainContainer, this._siteMenuComponent, RenderPosition.AFTERBEGIN);
   }
 
   _handleSortTypeChange(sortType) {
@@ -220,7 +220,6 @@ class MovieList {
   _renderMovieList() {
     const films = this._getMovies();
     const filmCount = films.length;
-    this._renderSiteMenu();
 
     if (filmCount === 0) {
       this._renderNoFilms();

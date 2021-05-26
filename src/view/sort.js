@@ -2,31 +2,29 @@ import AbstractView from './abstract';
 import { SortType } from '../const';
 
 class Sort extends AbstractView {
-  constructor() {
+  constructor(currentSortType) {
     super();
 
+    this._currentSortType = currentSortType;
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
   }
   getTemplate() {
     return `<ul class="sort">
-      <li><a href="#" class="sort__button sort__button--active" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
-      <li><a href="#" class="sort__button" data-sort-type="${SortType.DATE_DOWN}">Sort by date</a></li>
-      <li><a href="#" class="sort__button" data-sort-type="${SortType.RATING_DOWN}">Sort by rating</a></li>
+      <li><a href="#" class="sort__button ${this._currentSortType === SortType.DEFAULT ? 'sort__button--active' : ''}" data-sort-type="${SortType.DEFAULT}">Sort by default</a></li>
+      <li><a href="#" class="sort__button ${this._currentSortType === SortType.DATE_DOWN || this._currentSortType === SortType.DATE_UP ? 'sort__button--active' : ''}" data-sort-type="${SortType.DATE_DOWN}">Sort by date</a></li>
+      <li><a href="#" class="sort__button ${this._currentSortType === SortType.RATING_DOWN || this._currentSortType === SortType.RATING_UP ? 'sort__button--active' : ''}" data-sort-type="${SortType.RATING_DOWN}">Sort by rating</a></li>
     </ul >`;
   }
 
   _sortTypeChangeHandler(evt) {
+    evt.preventDefault();
+
     if (evt.target.tagName !== 'A') {
       return;
     }
 
-    this.getElement().querySelectorAll('.sort__button').forEach((button) => {
-      button.classList.remove('sort__button--active');
-    });
-
-    evt.preventDefault();
     this._callback.sortTypeChange(evt.target.dataset.sortType);
-    evt.target.classList.add('sort__button--active');
+
     switch (evt.target.dataset.sortType) {
       case SortType.DATE_DOWN:
         evt.target.dataset.sortType = SortType.DATE_UP;

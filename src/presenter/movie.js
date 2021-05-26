@@ -2,12 +2,13 @@ import FilmCardView from '../view/film-card';
 import FilmDetailsView from '../view/film-details';
 import { allComments } from '../mock/comment';
 import { render, replace, remove, RenderPosition } from '../utils/render';
+import { UserAction, UpdateType } from '../const';
+import CommentsModel from '../model/comments';
 
 class Movie {
   constructor(filmListComponent, changeData) {
     this._filmListComponent = filmListComponent;
     this._filmListContainer = filmListComponent.getElement().querySelector('.films-list__container');
-    this._allComments = allComments;
     this._changeData = changeData;
 
     this._filmCardComponent = null;
@@ -19,21 +20,20 @@ class Movie {
     this._handleWatchListClick = this._handleWatchListClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleCommentSubmit = this._handleCommentSubmit.bind(this);
+    this._handleDeleteButtonClick = this._handleDeleteButtonClick.bind(this);
   }
 
   init(film) {
     this._film = film;
 
     const prevFilmCardComponent = this._filmCardComponent;
-    const prevFilmDetailsComponent = this._filmDetailsComponent;
 
     this._filmCardComponent = new FilmCardView(film);
-    this._filmDetailsComponent = new FilmDetailsView(film, this._allComments);
 
     this._setFilmCardClickHandlers();
-    this._setFilmDetailsClickHandlers();
 
-    if (prevFilmCardComponent === null || prevFilmDetailsComponent === null) {
+    if (prevFilmCardComponent === null) {
       render(this._filmListContainer, this._filmCardComponent, RenderPosition.BEFOREEND);
       return;
     }
@@ -42,12 +42,7 @@ class Movie {
       replace(this._filmCardComponent, prevFilmCardComponent);
     }
 
-    if (document.body.contains(prevFilmDetailsComponent.getElement())) {
-      replace(this._filmDetailsComponent, prevFilmDetailsComponent);
-    }
-
     remove(prevFilmCardComponent);
-    remove(prevFilmDetailsComponent);
   }
 
   _setFilmCardClickHandlers() {
@@ -63,10 +58,14 @@ class Movie {
     this._filmDetailsComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmDetailsComponent.setCloseButtonClickHandler(this._hideDetails);
     this._filmDetailsComponent.setEmojiCheckHandler();
+    this._filmDetailsComponent.setCommentSubmitHandlers(this._handleCommentSubmit);
+    this._filmDetailsComponent.setDeleteButtonClickHandler(this._handleDeleteButtonClick);
   }
 
   _handleWatchListClick() {
     this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._film,
@@ -82,6 +81,8 @@ class Movie {
 
   _handleWatchedClick() {
     this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._film,
@@ -97,6 +98,8 @@ class Movie {
 
   _handleFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._film,
@@ -110,17 +113,36 @@ class Movie {
     );
   }
 
+  _handleCommentSubmit(comment) {
+    this._changeData(
+      UserAction.ADD_COMMENT,
+      UpdateType.PATCH,
+      comment,
+    );
+  }
+
+  _handleDeleteButtonClick(comment) {
+    this._changeData(
+      UserAction.DELETE_COMMENT,
+      UpdateType.PATCH,
+      comment,
+    );
+  }
+
   destroy() {
     remove(this._filmCardComponent);
     remove(this._filmDetailsComponent);
   }
 
   _showDetails() {
+    const comments = allComments.filter((comment) => this._film.comments.includes(comment.id));
+    const commentsModel = new CommentsModel();
+    commentsModel.setComments(comments);
+    this._filmDetailsComponent = new FilmDetailsView(this._film, commentsModel.getComments());
     render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this._onEscKeyDown);
     this._setFilmDetailsClickHandlers();
-    this._filmDetailsComponent.setCommentHandlers();
   }
 
   _hideDetails() {

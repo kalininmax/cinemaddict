@@ -7,6 +7,7 @@ import FooterStatisticView from './view/footer-statistics';
 import MoviePresenter from './presenter/movie-list';
 import MoviesModel from './model/movies';
 import CommentsModel from './model/comments';
+import FilterModel from './model/filter';
 
 const FILMS_COUNT = 12;
 
@@ -18,6 +19,8 @@ moviesModel.setMovies(films);
 
 const commentsModel = new CommentsModel();
 commentsModel.setComments(allComments);
+
+const filterModel = new FilterModel();
 
 
 const headerElement = document.querySelector('.header');

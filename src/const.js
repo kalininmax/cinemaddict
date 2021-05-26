@@ -18,8 +18,16 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
+const FilterType = {
+  ALL: 'all',
+  WATCHLIST: 'watchlist',
+  HISTIRY: 'histiry',
+  FAVORITES: 'favorites',
+};
+
 export {
   SortType,
   UserAction,
-  UpdateType
+  UpdateType,
+  FilterType
 };

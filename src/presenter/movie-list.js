@@ -73,8 +73,6 @@ class MovieList {
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
     // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
     // update - обновленные данные
-    console.log(actionType, updateType, update);
-
 
     switch (actionType) {
       case UserAction.UPDATE_FILM:

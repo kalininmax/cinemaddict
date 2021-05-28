@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid';
 import dayjs from 'dayjs';
+import he from 'he';
 import SmartView from './smart';
 import { humanizeDate, getHourFromMin } from '../utils/film';
 import { render, createElement, RenderPosition } from '../utils/render';
@@ -23,7 +24,7 @@ const createFilmCommentsTemplate = (filmComments) => {
         <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
       </span>
       <div>
-        <p class="film-details__comment-text">${comment}</p>
+        <p class="film-details__comment-text">${he.encode(comment)}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${humanizeDate(date, 'relative')}</span>

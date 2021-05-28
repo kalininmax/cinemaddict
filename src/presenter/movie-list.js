@@ -11,7 +11,6 @@ import { filter } from '../utils/filter';
 import { SortType, UserAction, UpdateType } from '../const';
 
 const FILMS_COUNT_PER_STEP = 5;
-// const EXTRA_FILMS_COUNT = 2;
 
 class MovieList {
   constructor(mainContainer, moviesModel, commentsModel, filterModel) {
@@ -21,8 +20,6 @@ class MovieList {
     this._mainContainer = mainContainer;
     this._renderedFilmCount = FILMS_COUNT_PER_STEP;
     this._moviePresenter = {};
-    this._moviePresenterTopRated = {};
-    this._moviePresenterMostCommented = {};
     this._currentSortType = SortType.DEFAULT;
 
     this._filmsComponent = new FilmsView();
@@ -73,20 +70,9 @@ class MovieList {
   }
 
   _handleViewAction(actionType, updateType, update) {
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
-
     switch (actionType) {
       case UserAction.UPDATE_FILM:
         this._moviesModel.updateMovie(updateType, update);
-        break;
-      case UserAction.ADD_COMMENT:
-        this._commentsModel.addComment(updateType, update);
-        break;
-      case UserAction.DELETE_COMMENT:
-        this._commentsModel.deleteComment(updateType, update);
         break;
     }
   }
@@ -108,10 +94,6 @@ class MovieList {
       default:
         break;
     }
-    // В зависимости от типа изменений решаем, что делать:
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список (например, когда задача ушла в архив)
-    // - обновить всю доску (например, при переключении фильтра)
   }
 
   _handleSortTypeChange(sortType) {
@@ -140,12 +122,6 @@ class MovieList {
     moviePresenter.init(film);
     if (container === this._filmListComponent) {
       this._moviePresenter[film.id] = moviePresenter;
-    }
-    if (container === this._topRatedFilmListComponent) {
-      this._moviePresenterTopRated[film.id] = moviePresenter;
-    }
-    if (container === this._mostCommentedFilmListComponent) {
-      this._moviePresenterMostCommented[film.id] = moviePresenter;
     }
   }
 
@@ -209,14 +185,6 @@ class MovieList {
     }
   }
 
-  // _renderFilmListExtra() {
-  //   render(this._filmsComponent, this._topRatedFilmListComponent, RenderPosition.BEFOREEND);
-  //   render(this._filmsComponent, this._mostCommentedFilmListComponent, RenderPosition.BEFOREEND);
-
-  //   this._renderFilms(0, EXTRA_FILMS_COUNT, this._topRatedFilmListComponent);
-  //   this._renderFilms(0, EXTRA_FILMS_COUNT, this._mostCommentedFilmListComponent);
-  // }
-
   _renderMovieList() {
     const films = this._getMovies();
     const filmCount = films.length;
@@ -233,7 +201,6 @@ class MovieList {
     if (filmCount > this._renderedFilmCount) {
       this._renderShowMoreButton();
     }
-    // this._renderFilmListExtra();
   }
 }
 

@@ -4,6 +4,7 @@ import SmartView from './smart';
 import { humanizeDate, getHourFromMin } from '../utils/film';
 import { render, createElement, RenderPosition } from '../utils/render';
 import { EMOTIONS } from '../mock/comment';
+import { ErrorMessage } from '../const';
 
 const createFilmGenresTemplate = (genres) => {
   let template = '';
@@ -154,7 +155,7 @@ class FilmDetails extends SmartView {
 
         <div class="film-details__bottom-container">
           <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
+            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._comments.length}</span></h3>
             <ul class="film-details__comments-list">
               ${commentsTemplate}
             </ul>
@@ -180,22 +181,26 @@ class FilmDetails extends SmartView {
       id: nanoid(),
       author: 'MyUserName',
       comment: evt.target.value,
-      date: humanizeDate(dayjs()),
+      date: dayjs().toDate(),
     }, true);
   }
 
-  _commentSubmitHandler() {
-    this._callback.commentSubmit();
+  _commentSubmitHandler(evt) {
+    evt.preventDefault();
+    if (evt.ctrlKey && evt.code === 'Enter') {
+      if (!this._data.comment || !this._data.emotion) {
+        evt.srcElement.setCustomValidity(ErrorMessage.COMMENT);
+        evt.srcElement.reportValidity();
+      } else {
+        this._callback.commentSubmit(this._data);
+        document.removeEventListener('keyup', this._commentSubmitHandler);
+      }
+    }
   }
 
   setCommentSubmitHandlers(callback) {
     this._callback.commentSubmit = callback;
-    document.addEventListener('keyup', (evt) => {
-      evt.preventDefault();
-      if (evt.ctrlKey && evt.code === 'Enter') {
-        this._commentSubmitHandler();
-      }
-    });
+    document.addEventListener('keyup', this._commentSubmitHandler);
   }
 
   _setInnerHandlers() {
@@ -230,6 +235,8 @@ class FilmDetails extends SmartView {
     this.setWatchedClickHandler(this._callback.watchedClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setDeleteButtonClickHandler(this._callback.deleteButtonClick);
+    this.setCloseButtonClickHandler(this._callback.closeButtonClick);
+    this.setCommentSubmitHandlers(this._callback.commentSubmit);
   }
 
   _closeButtonClickHandler(evt) {
@@ -278,7 +285,7 @@ class FilmDetails extends SmartView {
   _deleteButtonClickHandler(evt) {
     evt.preventDefault();
     const commentId = evt.target.dataset.commentId;
-    const comment = this._comments.filter((comment) => comment.id === commentId)[0];
+    const comment = this._comments.filter((comment) => comment.id === commentId)[0];// find
 
     this._callback.deleteButtonClick(comment);
   }

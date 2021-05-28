@@ -49,6 +49,9 @@ class Movie {
 
     remove(prevFilmCardComponent);
 
+    this._hideDetails();
+    this._showDetails();
+
   }
 
   _handleModelEvent(updateType) {

@@ -25,9 +25,14 @@ const FilterType = {
   FAVORITES: 'favorites',
 };
 
+const ErrorMessage = {
+  COMMENT: 'Пожалуйста, выберите эмоцию и напишите текст комментария',
+};
+
 export {
   SortType,
   UserAction,
   UpdateType,
-  FilterType
+  FilterType,
+  ErrorMessage
 };

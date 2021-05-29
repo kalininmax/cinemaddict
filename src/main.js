@@ -7,7 +7,7 @@ import FilterPresenter from './presenter/filter';
 import MoviesModel from './model/movies';
 import FilterModel from './model/filter';
 
-const FILMS_COUNT = 12;
+const FILMS_COUNT = 5;
 
 const films = new Array(FILMS_COUNT).fill().map(generateFilm);
 

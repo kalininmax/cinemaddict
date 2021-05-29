@@ -62,9 +62,7 @@ const createStatsFilterTemplate = (currentFilter) => {
 
 const createStatisticsTemplate = (films, currentFilter) => {
   const filteredFilms = filmsToFilterMap[currentFilter](films);
-  console.log(filteredFilms);
-
-  const totalDuration = getTotalDuration(filteredFilms);
+  const totalDuration = getHourFromMin(getTotalDuration(filteredFilms));
 
   return `<section class="statistic">
     <p class="statistic__rank">
@@ -82,7 +80,7 @@ const createStatisticsTemplate = (films, currentFilter) => {
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Total duration</h4>
-        <p class="statistic__item-text">${totalDuration} <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
+        <p class="statistic__item-text">${totalDuration.hours}<span class="statistic__item-description">h</span>${totalDuration.mins}<span class="statistic__item-description">m</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Top genre</h4>
@@ -114,8 +112,6 @@ class Statistics extends SmartView {
   }
 
   getTemplate() {
-    console.log(11, this._data.slice(), this._currentFilter);
-
     return createStatisticsTemplate(this._data, this._currentFilter);
   }
 

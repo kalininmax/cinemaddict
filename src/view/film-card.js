@@ -33,7 +33,7 @@ class FilmCard extends AbstractView {
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${releaseYear}</span>
-        <span class="film-card__duration">${getHourFromMin(runtime)}</span>
+        <span class="film-card__duration">${getHourFromMin(runtime).hours}h ${getHourFromMin(runtime).mins}m</span>
         <span class="film-card__genre">${genres}</span>
       </p>
       <img src="${poster}" alt="" class="film-card__poster">

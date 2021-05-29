@@ -1,34 +1,7 @@
-const createStatisticFiltersTemplate = ({ statistic_time }, isChecked) => {
-  if (statistic_time === 'all-time') {
-    return `<input type="radio"
-    class="statistic__filters-input visually-hidden"
-    name="statistic-filter"
-    id="statistic-${statistic_time}"
-    value="${statistic_time}" ${isChecked ? 'checked' : ''}>
-  <label for="statistic-${statistic_time}" class="statistic__filters-label">All time</label>`;
-  }
+import SmartView from './smart';
 
-  return `<input type="radio"
-    class="statistic__filters-input visually-hidden"
-    name="statistic-filter"
-    id="statistic-${statistic_time}"
-    value="${statistic_time}" ${isChecked ? 'checked' : ''}>
-  <label for="statistic-${statistic_time}" class="statistic__filters-label">${statistic_time}</label>`;
-};
-
-const calculateStatistic = (films) => {
-  return {
-    watched_films_count: films.length,
-    total_duration: films
-      .map(({ film_info: { runtime } }) => runtime)
-      .reduce((a, b) => a + b),
-  };
-};
-
-const createStatisticTemplate = (statistic) => {
-  const statisticFiltersTemplate = statistic.map((statistic, index) => createStatisticFiltersTemplate(statistic, index === 0)).join('');
-  const statisticData = calculateStatistic(statistic[0].watched_films);
-  return `<section class="statistic visually-hidden">
+const createStatisticsTemplate = () => {
+  return `<section class="statistic">
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
@@ -37,13 +10,27 @@ const createStatisticTemplate = (statistic) => {
 
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
       <p class="statistic__filters-description">Show stats:</p>
-      ${statisticFiltersTemplate}
+
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
+      <label for="statistic-all-time" class="statistic__filters-label">All time</label>
+
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
+      <label for="statistic-today" class="statistic__filters-label">Today</label>
+
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
+      <label for="statistic-week" class="statistic__filters-label">Week</label>
+
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
+      <label for="statistic-month" class="statistic__filters-label">Month</label>
+
+      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
+      <label for="statistic-year" class="statistic__filters-label">Year</label>
     </form>
 
     <ul class="statistic__text-list">
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">You watched</h4>
-        <p class="statistic__item-text">${statisticData.watched_films_count}<span class="statistic__item-description">movies</span></p>
+        <p class="statistic__item-text"><span class="statistic__item-description">movies</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Total duration</h4>
@@ -61,4 +48,14 @@ const createStatisticTemplate = (statistic) => {
   </section>`;
 };
 
-export { createStatisticTemplate };
+class Statistics extends SmartView {
+  constructor() {
+    super();
+  }
+
+  getTemplate() {
+    return createStatisticsTemplate();
+  }
+}
+
+export { Statistics as default };

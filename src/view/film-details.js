@@ -1,9 +1,11 @@
 import { nanoid } from 'nanoid';
 import dayjs from 'dayjs';
+import he from 'he';
 import SmartView from './smart';
 import { humanizeDate, getHourFromMin } from '../utils/film';
 import { render, createElement, RenderPosition } from '../utils/render';
 import { EMOTIONS } from '../mock/comment';
+import { ErrorMessage } from '../const';
 
 const createFilmGenresTemplate = (genres) => {
   let template = '';
@@ -14,21 +16,19 @@ const createFilmGenresTemplate = (genres) => {
   return template;
 };
 
-const createFilmCommentsTemplate = (allComments, commentIds) => {
-  const filmComments = allComments.filter((comment) => commentIds.includes(comment.id));
-
+const createFilmCommentsTemplate = (filmComments) => {
   let template = '';
-  filmComments.forEach(({ author, comment, date, emotion }) => {
+  filmComments.forEach(({ author, comment, date, emotion, id }) => {
     template += `<li class="film-details__comment">
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
       </span>
       <div>
-        <p class="film-details__comment-text">${comment}</p>
+        <p class="film-details__comment-text">${he.encode(comment)}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${humanizeDate(date, 'relative')}</span>
-          <button class="film-details__comment-delete">Delete</button>
+          <button class="film-details__comment-delete" data-comment-id="${id}">Delete</button>
         </p>
       </div>
     </li>`;
@@ -49,10 +49,10 @@ const createEmojiListTemplate = (emotions) => {
 };
 
 class FilmDetails extends SmartView {
-  constructor(film, allComments) {
+  constructor(film, comments) {
     super();
     this._film = film;
-    this._allComments = allComments;
+    this._comments = comments;
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
     this._watchListClickHandler = this._watchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -60,18 +60,19 @@ class FilmDetails extends SmartView {
     this._emojiCheckHandler = this._emojiCheckHandler.bind(this);
     this._commentInputHandler = this._commentInputHandler.bind(this);
     this._commentSubmitHandler = this._commentSubmitHandler.bind(this);
+    this._deleteButtonClickHandler = this._deleteButtonClickHandler.bind(this);
     this._setInnerHandlers();
   }
 
   getTemplate() {
-    const { comments: commentIds,
+    const {
       film_info: { title, rating, poster, director, writers, actors, ageRating, runtime, genres, description,
         release: { date, country } },
       user_details: { watchlist, watched, favorite } } = this._film;
 
     const genresTemplate = createFilmGenresTemplate(genres);
     const releaseDate = humanizeDate(date);
-    const commentsTemplate = createFilmCommentsTemplate(this._allComments, commentIds);
+    const commentsTemplate = createFilmCommentsTemplate(this._comments);
     const emotionsListTemplate = createEmojiListTemplate(EMOTIONS);
     const watchlistChecked = watchlist ? 'checked' : '';
     const watchedChecked = watched ? 'checked' : '';
@@ -155,7 +156,7 @@ class FilmDetails extends SmartView {
 
         <div class="film-details__bottom-container">
           <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
+            <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._comments.length}</span></h3>
             <ul class="film-details__comments-list">
               ${commentsTemplate}
             </ul>
@@ -181,24 +182,26 @@ class FilmDetails extends SmartView {
       id: nanoid(),
       author: 'MyUserName',
       comment: evt.target.value,
-      date: humanizeDate(dayjs()),
+      date: dayjs().toDate(),
     }, true);
   }
 
-  _commentSubmitHandler() {
-
-    // добавить объект коммента в массив всех комментов
-    // добавить id коммента в массив с комментами фильма
-
+  _commentSubmitHandler(evt) {
+    evt.preventDefault();
+    if (evt.ctrlKey && evt.code === 'Enter') {
+      if (!this._data.comment || !this._data.emotion) {
+        evt.srcElement.setCustomValidity(ErrorMessage.COMMENT);
+        evt.srcElement.reportValidity();
+      } else {
+        this._callback.commentSubmit(this._data);
+        document.removeEventListener('keyup', this._commentSubmitHandler);
+      }
+    }
   }
 
-  setCommentHandlers() {
-    document.addEventListener('keyup', (evt) => {
-      evt.preventDefault();
-      if (evt.ctrlKey && evt.code === 'Enter') {
-        // че-то там че-то
-      }
-    });
+  setCommentSubmitHandlers(callback) {
+    this._callback.commentSubmit = callback;
+    document.addEventListener('keyup', this._commentSubmitHandler);
   }
 
   _setInnerHandlers() {
@@ -232,6 +235,9 @@ class FilmDetails extends SmartView {
     this.setWatchListClickHandler(this._callback.watchListClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setDeleteButtonClickHandler(this._callback.deleteButtonClick);
+    this.setCloseButtonClickHandler(this._callback.closeButtonClick);
+    this.setCommentSubmitHandlers(this._callback.commentSubmit);
   }
 
   _closeButtonClickHandler(evt) {
@@ -275,6 +281,21 @@ class FilmDetails extends SmartView {
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector('#favorite').addEventListener('change', this._favoriteClickHandler);
+  }
+
+  _deleteButtonClickHandler(evt) {
+    evt.preventDefault();
+    const commentId = evt.target.dataset.commentId;
+    const comment = this._comments.filter((comment) => comment.id === commentId)[0];
+
+    this._callback.deleteButtonClick(comment);
+  }
+
+  setDeleteButtonClickHandler(callback) {
+    this._callback.deleteButtonClick = callback;
+    if (this.getElement().querySelector('.film-details__comment-delete')) {
+      this.getElement().querySelector('.film-details__comment-delete').addEventListener('click', this._deleteButtonClickHandler);
+    }
   }
 }
 

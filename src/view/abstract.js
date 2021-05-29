@@ -27,15 +27,11 @@ class Abstract {
   }
 
   show() {
-    if (this._element) {
-      this._element.classList.remove('visually-hidden');
-    }
+    this._element.classList.remove('visually-hidden');
   }
 
   hide() {
-    if (this._element) {
-      this._element.classList.add('visually-hidden');
-    }
+    this._element.classList.add('visually-hidden');
   }
 }
 

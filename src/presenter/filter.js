@@ -44,21 +44,25 @@ class Filter {
   _handleMenuClick(menuItem) {
     switch (menuItem) {
       case MenuItem.ALL_MOVIES:
+        this._movieListPresenter.hideStatistics();
         this._movieListPresenter.destroy();
         this._filterModel.setFilter(UpdateType.MAJOR, menuItem);
         this._movieListPresenter.init();
         break;
       case MenuItem.WATCHLIST:
+        this._movieListPresenter.hideStatistics();
         this._movieListPresenter.destroy();
         this._filterModel.setFilter(UpdateType.MAJOR, menuItem);
         this._movieListPresenter.init();
         break;
       case MenuItem.HISTORY:
+        this._movieListPresenter.hideStatistics();
         this._movieListPresenter.destroy();
         this._filterModel.setFilter(UpdateType.MAJOR, menuItem);
         this._movieListPresenter.init();
         break;
       case MenuItem.FAVORITES:
+        this._movieListPresenter.hideStatistics();
         this._movieListPresenter.destroy();
         this._filterModel.setFilter(UpdateType.MAJOR, menuItem);
         this._movieListPresenter.init();

@@ -22,7 +22,6 @@ class MovieList {
     this._currentSortType = SortType.DEFAULT;
 
     this._filmsComponent = new FilmsView();
-    this._statsComponent = new StatisticsView();
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
     this._filmListComponent = new FilmListView();
@@ -45,12 +44,15 @@ class MovieList {
   }
 
   showStatistics() {
+    this._statsComponent = new StatisticsView(this._moviesModel.getMovies());
     render(this._mainContainer, this._statsComponent, RenderPosition.BEFOREEND);
     this._statsComponent.show();
   }
 
   hideStatistics() {
-    this._statsComponent.hide();
+    if (this._statsComponent) {
+      this._statsComponent.hide();
+    }
   }
 
   destroy() {
@@ -58,8 +60,6 @@ class MovieList {
 
     remove(this._filmsComponent);
     remove(this._filmListComponent);
-
-    this.hideStatistics();
 
     this._moviesModel.removeObserver(this._handleModelEvent);
     this._filterModel.removeObserver(this._handleModelEvent);

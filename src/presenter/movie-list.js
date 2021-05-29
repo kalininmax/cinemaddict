@@ -52,6 +52,8 @@ class MovieList {
   hideStatistics() {
     if (this._statsComponent) {
       this._statsComponent.hide();
+      remove(this._statsComponent);
+      this._statsComponent = null;
     }
   }
 

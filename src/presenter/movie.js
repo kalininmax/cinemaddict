@@ -27,6 +27,8 @@ class Movie {
     this._allCommentsModel = new CommentsModel();
     this._allCommentsModel.setComments(allComments);
     this._allCommentsModel.addObserver(this._handleModelEvent);
+    this._filmCommentsModel = new CommentsModel();
+    this._filmCommentsModel.addObserver(this._handleModelEvent);
   }
 
   init(film) {
@@ -48,10 +50,6 @@ class Movie {
     }
 
     remove(prevFilmCardComponent);
-
-    this._hideDetails();
-    this._showDetails();
-
   }
 
   _handleModelEvent(updateType) {
@@ -75,9 +73,7 @@ class Movie {
     this._filmDetailsComponent.setCloseButtonClickHandler(this._hideDetails);
     this._filmDetailsComponent.setEmojiCheckHandler();
     this._filmDetailsComponent.setCommentSubmitHandlers(this._handleCommentSubmit);
-    if (this._filmDetailsComponent.getElement().querySelector('.film-details__comment-delete')) {
-      this._filmDetailsComponent.setDeleteButtonClickHandler(this._handleDeleteButtonClick);
-    }
+    this._filmDetailsComponent.setDeleteButtonClickHandler(this._handleDeleteButtonClick);
   }
 
   _handleWatchListClick() {
@@ -132,8 +128,6 @@ class Movie {
   }
 
   _handleCommentSubmit(comment) {
-    this._allCommentsModel.addComment(UpdateType.PATCH, comment);
-
     this._changeData(
       UserAction.UPDATE_FILM,
       UpdateType.PATCH,
@@ -145,6 +139,7 @@ class Movie {
         },
       ),
     );
+    this._allCommentsModel.addComment(UpdateType.PATCH, comment);
   }
 
   _handleDeleteButtonClick(comment) {
@@ -172,10 +167,8 @@ class Movie {
 
   _showDetails() {
     const comments = this._allCommentsModel.getComments().filter((comment) => this._film.comments.includes(comment.id));
-
-    const commentsModel = new CommentsModel();
-    commentsModel.setComments(comments);
-    this._filmDetailsComponent = new FilmDetailsView(this._film, commentsModel.getComments());
+    this._filmCommentsModel.setComments(comments);
+    this._filmDetailsComponent = new FilmDetailsView(this._film, this._filmCommentsModel.getComments());
     render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this._onEscKeyDown);

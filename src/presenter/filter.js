@@ -1,18 +1,21 @@
 import FilterView from '../view/site-menu';
 import { render, RenderPosition, replace, remove } from '../utils/render';
 import { filter } from '../utils/filter';
-import { FilterType, UpdateType } from '../const';
+import { FilterType, UpdateType, MenuItem } from '../const';
 
 class Filter {
-  constructor(filterContainer, filterModel, moviesModel) {
+  constructor(filterContainer, filterModel, moviesModel, moviePresenter, StatsView) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
     this._moviesModel = moviesModel;
+    this._movieListPresenter = moviePresenter;
+
+    this._statsComponent = StatsView;
 
     this._filterComponent = null;
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
-    this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
+    this._handleMenuClick = this._handleMenuClick.bind(this);
 
     this._moviesModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -23,7 +26,7 @@ class Filter {
     const prevFilterComponent = this._filterComponent;
 
     this._filterComponent = new FilterView(filters, this._filterModel.getFilter());
-    this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
+    this._filterComponent.setMenuClickHandler(this._handleMenuClick);
 
     if (prevFilterComponent === null) {
       render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
@@ -38,12 +41,33 @@ class Filter {
     this.init();
   }
 
-  _handleFilterTypeChange(filterType) {
-    if (this._filterModel.getFilter() === filterType) {
-      return;
+  _handleMenuClick(menuItem) {
+    switch (menuItem) {
+      case MenuItem.ALL_MOVIES:
+        this._movieListPresenter.destroy();
+        this._filterModel.setFilter(UpdateType.MAJOR, menuItem);
+        this._movieListPresenter.init();
+        break;
+      case MenuItem.WATCHLIST:
+        this._movieListPresenter.destroy();
+        this._filterModel.setFilter(UpdateType.MAJOR, menuItem);
+        this._movieListPresenter.init();
+        break;
+      case MenuItem.HISTORY:
+        this._movieListPresenter.destroy();
+        this._filterModel.setFilter(UpdateType.MAJOR, menuItem);
+        this._movieListPresenter.init();
+        break;
+      case MenuItem.FAVORITES:
+        this._movieListPresenter.destroy();
+        this._filterModel.setFilter(UpdateType.MAJOR, menuItem);
+        this._movieListPresenter.init();
+        break;
+      case MenuItem.STATS:
+        this._movieListPresenter.destroy();
+        this._movieListPresenter.showStatistics();
+        break;
     }
-
-    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
   }
 
   _getFilters() {

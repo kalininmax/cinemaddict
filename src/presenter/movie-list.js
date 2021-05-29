@@ -1,9 +1,9 @@
 import SortView from '../view/sort';
 import FilmsView from '../view/films';
+import StatisticsView from '../view/statistics';
 import FilmListView from '../view/film-list';
 import NoFilmView from '../view/no-film';
 import ShowMoreButtonView from '../view/show-more-btn';
-import FilmListExtraView from '../view/film-list-extra';
 import MoviePresenter from './movie';
 import { render, remove, RenderPosition } from '../utils/render';
 import { sortFilmDateDown, sortFilmDateUp, sortFilmRatingDown, sortFilmRatingUp } from '../utils/film';
@@ -13,9 +13,8 @@ import { SortType, UserAction, UpdateType } from '../const';
 const FILMS_COUNT_PER_STEP = 5;
 
 class MovieList {
-  constructor(mainContainer, moviesModel, commentsModel, filterModel) {
+  constructor(mainContainer, moviesModel, filterModel) {
     this._moviesModel = moviesModel;
-    this._commentsModel = commentsModel;
     this._filterModel = filterModel;
     this._mainContainer = mainContainer;
     this._renderedFilmCount = FILMS_COUNT_PER_STEP;
@@ -23,28 +22,47 @@ class MovieList {
     this._currentSortType = SortType.DEFAULT;
 
     this._filmsComponent = new FilmsView();
+    this._statsComponent = new StatisticsView();
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
     this._filmListComponent = new FilmListView();
-    this._topRatedFilmListComponent = new FilmListExtraView('Top rated');
-    this._mostCommentedFilmListComponent = new FilmListExtraView('Most commented');
     this._noFilmComponent = new NoFilmView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-
-    this._moviesModel.addObserver(this._handleModelEvent);
-    this._commentsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
     render(this._mainContainer, this._filmsComponent, RenderPosition.BEFOREEND);
     render(this._filmsComponent, this._filmListComponent, RenderPosition.BEFOREEND);
 
+    this._moviesModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
     this._renderMovieList();
+  }
+
+  showStatistics() {
+    render(this._mainContainer, this._statsComponent, RenderPosition.BEFOREEND);
+    this._statsComponent.show();
+  }
+
+  hideStatistics() {
+    this._statsComponent.hide();
+  }
+
+  destroy() {
+    this._clearMovieList({ resetRenderedFilmCount: true, resetSortType: true });
+
+    remove(this._filmsComponent);
+    remove(this._filmListComponent);
+
+    this.hideStatistics();
+
+    this._moviesModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   _getMovies() {
@@ -63,10 +81,6 @@ class MovieList {
         return filtredMovies.sort(sortFilmRatingUp);
     }
     return filtredMovies;
-  }
-
-  _getComments() {
-    return this._commentsModel.getComments();
   }
 
   _handleViewAction(actionType, updateType, update) {

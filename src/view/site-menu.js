@@ -1,4 +1,7 @@
 import AbstractView from './abstract';
+import { MenuItem } from '../const';
+
+const menuActiveClass = 'main-navigation__item--active';
 
 const createFilterItemTemplate = (filter, currentFilterType) => {
   const { type, name, count } = filter;
@@ -6,9 +9,9 @@ const createFilterItemTemplate = (filter, currentFilterType) => {
   return (
     `<a
       href="#${type}"
-      class="main-navigation__item ${type === currentFilterType ? 'main-navigation__item--active' : ''}">
+      class="main-navigation__item ${type === currentFilterType ? `${menuActiveClass}` : ''}">
       ${name}
-      ${type !== 'all' ? `<span class="main-navigation__item-count">${count}</span>` : ''}
+      ${type !== MenuItem.ALL_MOVIES ? `<span class="main-navigation__item-count">${count}</span>` : ''}
       </a>`
   );
 };
@@ -22,8 +25,10 @@ class SiteMenu extends AbstractView {
     super();
     this._filters = filters;
     this._currentFilter = currentFilterType;
+    this._filterElements = this.getElement().querySelectorAll('.main-navigation__item');
+    this._statsElement = this.getElement().querySelector('.main-navigation__additional');
 
-    this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
+    this._menuClickHandler = this._menuClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -31,25 +36,32 @@ class SiteMenu extends AbstractView {
       <div class="main-navigation__items">
         ${createFilterTemplate(this._filters, this._currentFilter)}
       </div>
-      <a href="#stats" class="main-navigation__additional">Stats</a>
+      <a href="#${MenuItem.STATS}" class="main-navigation__additional">Stats</a>
     </nav>`;
   }
 
-  _filterTypeChangeHandler(evt) {
+  _menuClickHandler(evt) {
     evt.preventDefault();
 
-    if (evt.target.tagName !== 'A') {
-      return;
+    if (evt.target.classList.contains('main-navigation__item')) {
+      this._statsElement.classList.remove(`${menuActiveClass}`);
+      const filterType = evt.target.hash.replace(/[#]/g, '');
+      this._callback.menuClick(filterType);
     }
 
-    const filterType = evt.target.hash.replace(/[#]/g, '');
-    this._callback.filterTypeChange(filterType);
+    if (evt.target === this._statsElement) {
+      this._filterElements.forEach((element) => element.classList.remove(`${menuActiveClass}`));
+      this._statsElement.classList.add(`${menuActiveClass}`);
+      const menuItem = evt.target.hash.replace(/[#]/g, '');
+      this._callback.menuClick(menuItem);
+    }
   }
 
-  setFilterTypeChangeHandler(callback) {
-    this._callback.filterTypeChange = callback;
-    this.getElement().addEventListener('click', this._filterTypeChangeHandler);
+  setMenuClickHandler(callback) {
+    this._callback.menuClick = callback;
+    this.getElement().addEventListener('click', this._menuClickHandler);
   }
+
 }
 
 export { SiteMenu as default };

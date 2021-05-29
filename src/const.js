@@ -25,6 +25,14 @@ const FilterType = {
   FAVORITES: 'favorites',
 };
 
+const MenuItem = {
+  ALL_MOVIES: 'all',
+  WATCHLIST: 'watchlist',
+  HISTORY: 'history',
+  FAVORITES: 'favorites',
+  STATS: 'stats',
+};
+
 const ErrorMessage = {
   COMMENT: 'Пожалуйста, выберите эмоцию и напишите текст комментария',
 };
@@ -34,5 +42,6 @@ export {
   UserAction,
   UpdateType,
   FilterType,
+  MenuItem,
   ErrorMessage
 };

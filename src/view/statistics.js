@@ -1,31 +1,82 @@
-import dayjs from 'dayjs';
 import Chart from 'chart.js';
 import { getHourFromMin } from '../utils/film';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import SmartView from './smart';
-import { getStatsTime } from '../utils/statistics';
+import { filmsToFilterMap, getTotalDuration, getTopGenre, getGenresStatistics, CHART_BAR } from '../utils/statistics';
 import { StatsDate } from '../const';
 
-const filmsToFilterMap = {
-  'all-time': (films) => films.filter(({ user_details: { watched } }) => watched),
-  today: (films) => films
-    .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().subtract(1, 'day')),
-  week: (films) => films
-    .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().subtract(7, 'day')),
-  month: (films) => films
-    .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().subtract(30, 'day')),
-  year: (films) => films
-    .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().subtract(365, 'day')),
-};
+const renderStatisticsChart = (films, statisticsCtx) => {
+  const BAR_HEIGHT = CHART_BAR.HEIGHT;
 
-const getTotalDuration = (films) => {
-  return films
-    .map(({ film_info: { runtime } }) => runtime)
-    .reduce((a, b) => a + b, 0);
+  const genresNames = [];
+  const genresCounts = [];
+
+  Object
+    .entries(getGenresStatistics(films))
+    .sort((a, b) => b[1] - a[1])
+    .forEach(([name, count]) => {
+      genresNames.push(name);
+      genresCounts.push(count);
+    });
+
+  statisticsCtx.height = BAR_HEIGHT * Object.values(genresNames).length;
+
+  return new Chart(statisticsCtx, {
+    plugins: [ChartDataLabels],
+    type: CHART_BAR.TYPE,
+    data: {
+      labels: genresNames,
+      datasets: [{
+        data: genresCounts,
+        backgroundColor: CHART_BAR.BG_COLOR,
+        hoverBackgroundColor: CHART_BAR.BG_COLOR,
+        anchor: CHART_BAR.LABEL_ALIGN,
+      }],
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: CHART_BAR.FONT_SIZE,
+          },
+          color: CHART_BAR.FONT_COLOR,
+          anchor: CHART_BAR.LABEL_ALIGN,
+          align: CHART_BAR.LABEL_ALIGN,
+          offset: CHART_BAR.LABEL_OFFSET,
+        },
+      },
+      scales: {
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false,
+          },
+        }],
+        yAxes: [{
+          ticks: {
+            fontColor: CHART_BAR.FONT_COLOR,
+            padding: CHART_BAR.PADDING,
+            fontSize: CHART_BAR.FONT_SIZE,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false,
+          },
+          barThickness: CHART_BAR.THICKNESS,
+        }],
+      },
+      legend: {
+        display: false,
+      },
+      tooltips: {
+        enabled: false,
+      },
+    },
+  });
 };
 
 const createStatsFilterTemplate = (currentFilter) => {
@@ -61,8 +112,8 @@ const createStatsFilterTemplate = (currentFilter) => {
 };
 
 const createStatisticsTemplate = (films, currentFilter) => {
-  const filteredFilms = filmsToFilterMap[currentFilter](films);
-  const totalDuration = getHourFromMin(getTotalDuration(filteredFilms));
+  const totalDuration = getHourFromMin(getTotalDuration(films));
+  const topGenre = getTopGenre(films);
 
   return `<section class="statistic">
     <p class="statistic__rank">
@@ -76,15 +127,18 @@ const createStatisticsTemplate = (films, currentFilter) => {
     <ul class="statistic__text-list">
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">You watched</h4>
-        <p class="statistic__item-text">${filteredFilms.length} <span class="statistic__item-description">movies</span></p>
+        <p class="statistic__item-text">${films.length} <span class="statistic__item-description">movies</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Total duration</h4>
-        <p class="statistic__item-text">${totalDuration.hours}<span class="statistic__item-description">h</span>${totalDuration.mins}<span class="statistic__item-description">m</span></p>
+        <p class="statistic__item-text">
+          ${totalDuration.hours}<span class="statistic__item-description">h</span>
+          ${totalDuration.mins}<span class="statistic__item-description">m</span>
+        </p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Top genre</h4>
-        <p class="statistic__item-text">Sci-Fi</p>
+        <p class="statistic__item-text">${topGenre}</p>
       </li>
     </ul>
 
@@ -98,17 +152,22 @@ class Statistics extends SmartView {
   constructor(films) {
     super();
 
-    this._data = films;
+    this._films = films;
 
     this._currentFilter = StatsDate.ALL_TIME.type;
 
+    this._data = filmsToFilterMap[this._currentFilter](this._films);
+    this._chart = null;
+
+
     this._statsFilterChangeHandler = this._statsFilterChangeHandler.bind(this);
     this._setStatsFilterChangeHandler();
-
+    this._setChart();
   }
 
   restoreHandlers() {
     this._setStatsFilterChangeHandler();
+    this._setChart();
   }
 
   getTemplate() {
@@ -119,12 +178,23 @@ class Statistics extends SmartView {
     evt.preventDefault();
     if (evt.target.classList.contains('statistic__filters-input')) {
       this._currentFilter = evt.target.value;
+      this._data = filmsToFilterMap[this._currentFilter](this._films);
       this.updateElement();
     }
   }
 
   _setStatsFilterChangeHandler() {
     this.getElement().addEventListener('change', this._statsFilterChangeHandler);
+  }
+
+  _setChart() {
+    if (this._chart !== null) {
+      this._chart = null;
+    }
+
+    const statisticsCtx = this.getElement().querySelector('.statistic__chart');
+
+    this._chart = renderStatisticsChart(this._data, statisticsCtx);
   }
 
 }

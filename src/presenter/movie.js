@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import FilmCardView from '../view/film-card';
 import FilmDetailsView from '../view/film-details';
 import { allComments } from '../mock/comment';
@@ -104,6 +105,7 @@ class Movie {
           user_details: {
             ...this._film.user_details,
             watched: !this._film.user_details.watched,
+            watchingDate: dayjs().toDate(),
           },
         },
       ),

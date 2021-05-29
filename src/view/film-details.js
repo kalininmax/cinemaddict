@@ -286,14 +286,16 @@ class FilmDetails extends SmartView {
   _deleteButtonClickHandler(evt) {
     evt.preventDefault();
     const commentId = evt.target.dataset.commentId;
-    const comment = this._comments.filter((comment) => comment.id === commentId)[0];// find
+    const comment = this._comments.filter((comment) => comment.id === commentId)[0];
 
     this._callback.deleteButtonClick(comment);
   }
 
   setDeleteButtonClickHandler(callback) {
     this._callback.deleteButtonClick = callback;
-    this.getElement().querySelector('.film-details__comment-delete').addEventListener('click', this._deleteButtonClickHandler);
+    if (this.getElement().querySelector('.film-details__comment-delete')) {
+      this.getElement().querySelector('.film-details__comment-delete').addEventListener('click', this._deleteButtonClickHandler);
+    }
   }
 }
 

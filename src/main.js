@@ -20,7 +20,7 @@ const headerElement = document.querySelector('.header');
 const mainElement = document.querySelector('.main');
 const footerStats = document.querySelector('.footer__statistics');
 
-const movieListPresenter = new MovieListPresenter(mainElement, moviesModel, filterModel);
+const movieListPresenter = new MovieListPresenter(mainElement, moviesModel, filterModel, api);
 const filterPresenter = new FilterPresenter(mainElement, filterModel, moviesModel, movieListPresenter);
 const userProfilePresenter = new UserProfilePresenter(headerElement, moviesModel);
 
@@ -33,7 +33,8 @@ api.getFilms()
   .then((films) => {
     moviesModel.setMovies(UpdateType.INIT, films);
     render(footerStats, new FooterStatisticView(films.length), RenderPosition.BEFOREEND);
-  })
-  .catch(() => {
-    moviesModel.setMovies(UpdateType.INIT, []);
   });
+// .catch(() => {
+//   moviesModel.setMovies(UpdateType.INIT, []);
+//   render(footerStats, new FooterStatisticView(0), RenderPosition.BEFOREEND);
+// });

@@ -23,6 +23,8 @@ class FilmCard extends AbstractView {
     const { comments,
       filmInfo: { title, rating, poster, runtime, genres, description, release: { date } },
       userDetails: { watchlist, watched, favorite } } = this._film;
+    const filmGenres = genres.join(', ');
+
     const watchlistClass = watchlist ? 'film-card__controls-item--active' : '';
     const watchedClass = watched ? 'film-card__controls-item--active' : '';
     const favoriteClass = favorite ? 'film-card__controls-item--active' : '';
@@ -34,7 +36,7 @@ class FilmCard extends AbstractView {
       <p class="film-card__info">
         <span class="film-card__year">${releaseYear}</span>
         <span class="film-card__duration">${getHourFromMin(runtime).hours}h ${getHourFromMin(runtime).mins}m</span>
-        <span class="film-card__genre">${genres}</span>
+        <span class="film-card__genre">${filmGenres}</span>
       </p>
       <img src="${poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${cutDesctiption(description)}</p>

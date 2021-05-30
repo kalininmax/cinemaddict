@@ -14,10 +14,12 @@ import { SortType, UserAction, UpdateType } from '../const';
 const FILMS_COUNT_PER_STEP = 5;
 
 class MovieList {
-  constructor(mainContainer, moviesModel, filterModel) {
+  constructor(mainContainer, moviesModel, filterModel, api) {
+    this._mainContainer = mainContainer;
     this._moviesModel = moviesModel;
     this._filterModel = filterModel;
-    this._mainContainer = mainContainer;
+    this._api = api;
+
     this._renderedFilmCount = FILMS_COUNT_PER_STEP;
     this._moviePresenter = {};
     this._currentSortType = SortType.DEFAULT;
@@ -91,7 +93,9 @@ class MovieList {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
-        this._moviesModel.updateMovie(updateType, update);
+        this._api.updateFilm(update).then((response) => {
+          this._moviesModel.updateMovie(updateType, response);
+        });
         break;
     }
   }
@@ -142,7 +146,7 @@ class MovieList {
   }
 
   _renderFilm(film, container = this._filmListComponent) {
-    const moviePresenter = new MoviePresenter(container, this._handleViewAction);
+    const moviePresenter = new MoviePresenter(container, this._handleViewAction, this._api);
     moviePresenter.init(film);
     if (container === this._filmListComponent) {
       this._moviePresenter[film.id] = moviePresenter;
@@ -228,9 +232,9 @@ class MovieList {
       return;
     }
 
-    this._renderSort();
 
     this._renderFilms(films.slice(0, Math.min(filmCount, this._renderedFilmCount)));
+    this._renderSort();
 
     if (filmCount > this._renderedFilmCount) {
       this._renderShowMoreButton();

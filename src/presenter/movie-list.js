@@ -1,4 +1,5 @@
 import SortView from '../view/sort';
+import LoadingView from '../view/loading';
 import FilmsView from '../view/films';
 import StatisticsView from '../view/statistics';
 import FilmListView from '../view/film-list';
@@ -20,12 +21,14 @@ class MovieList {
     this._renderedFilmCount = FILMS_COUNT_PER_STEP;
     this._moviePresenter = {};
     this._currentSortType = SortType.DEFAULT;
+    this._isLoading = true;
 
-    this._filmsComponent = new FilmsView();
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
+    this._filmsComponent = new FilmsView();
     this._filmListComponent = new FilmListView();
     this._noFilmComponent = new NoFilmView();
+    this._loadingComponent = new LoadingView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -106,6 +109,11 @@ class MovieList {
         this._clearMovieList({ resetRenderedFilmCount: true, resetSortType: true });
         this._renderMovieList();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderMovieList();
+        break;
 
       default:
         break;
@@ -154,6 +162,10 @@ class MovieList {
     render(this._filmsComponent, this._noFilmComponent, RenderPosition.AFTERBEGIN);
   }
 
+  _renderLoading() {
+    render(this._filmsComponent, this._loadingComponent, RenderPosition.AFTERBEGIN);
+  }
+
   _handleShowMoreButtonClick() {
     const filmCount = this._getMovies().length;
     const newRenderedFilmCount = Math.min(filmCount, this._renderedFilmCount + FILMS_COUNT_PER_STEP);
@@ -188,6 +200,7 @@ class MovieList {
 
     remove(this._sortComponent);
     remove(this._noFilmComponent);
+    remove(this._loadingComponent);
     remove(this._showMoreButtonComponent);
 
     if (resetRenderedFilmCount) {
@@ -202,6 +215,11 @@ class MovieList {
   }
 
   _renderMovieList() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const films = this._getMovies();
     const filmCount = films.length;
 

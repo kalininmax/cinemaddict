@@ -12,12 +12,10 @@ const humanizeDate = (date, template = 'D MMMM YYYY') => {
 };
 
 const getHourFromMin = (mins) => {
-  const hours = Math.trunc(mins / 60);
-  const minutes = mins % 60;
-  if (hours > 0) {
-    return `${hours}h ${minutes}m`;
-  }
-  return `${minutes}m`;
+  return {
+    hours: Math.trunc(mins / 60),
+    mins: mins % 60,
+  };
 };
 
 const getWeightForNullDate = (dateA, dateB) => {

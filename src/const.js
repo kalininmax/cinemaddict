@@ -25,6 +25,37 @@ const FilterType = {
   FAVORITES: 'favorites',
 };
 
+const MenuItem = {
+  ALL_MOVIES: 'all',
+  WATCHLIST: 'watchlist',
+  HISTORY: 'history',
+  FAVORITES: 'favorites',
+  STATS: 'stats',
+};
+
+const StatsDate = {
+  ALL_TIME: {
+    type: 'all-time',
+    name: 'All time',
+  },
+  TODAY: {
+    type: 'today',
+    name: 'Today',
+  },
+  WEEK: {
+    type: 'week',
+    name: 'Week',
+  },
+  MONTH: {
+    type: 'month',
+    name: 'Month',
+  },
+  YEAR: {
+    type: 'year',
+    name: 'Year',
+  },
+};
+
 const ErrorMessage = {
   COMMENT: 'Пожалуйста, выберите эмоцию и напишите текст комментария',
 };
@@ -34,5 +65,7 @@ export {
   UserAction,
   UpdateType,
   FilterType,
+  MenuItem,
+  StatsDate,
   ErrorMessage
 };

@@ -118,7 +118,7 @@ class FilmDetails extends SmartView {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${getHourFromMin(runtime)}</td>
+                  <td class="film-details__cell">${getHourFromMin(runtime).hours}h ${getHourFromMin(runtime).mins}m</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>

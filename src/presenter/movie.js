@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import FilmCardView from '../view/film-card';
 import FilmDetailsView from '../view/film-details';
 import { allComments } from '../mock/comment';
@@ -17,9 +18,15 @@ class Movie {
     this._showDetails = this._showDetails.bind(this);
     this._hideDetails = this._hideDetails.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
+
     this._handleWatchListClick = this._handleWatchListClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+
+    this._handleWatchListPopupClick = this._handleWatchListPopupClick.bind(this);
+    this._handleWatchedPopupClick = this._handleWatchedPopupClick.bind(this);
+    this._handleFavoritePopupClick = this._handleFavoritePopupClick.bind(this);
+
     this._handleCommentSubmit = this._handleCommentSubmit.bind(this);
     this._handleDeleteButtonClick = this._handleDeleteButtonClick.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -67,16 +74,16 @@ class Movie {
   }
 
   _setFilmDetailsClickHandlers() {
-    this._filmDetailsComponent.setWatchListClickHandler(this._handleWatchListClick);
-    this._filmDetailsComponent.setWatchedClickHandler(this._handleWatchedClick);
-    this._filmDetailsComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._filmDetailsComponent.setWatchListClickHandler(this._handleWatchListPopupClick);
+    this._filmDetailsComponent.setWatchedClickHandler(this._handleWatchedPopupClick);
+    this._filmDetailsComponent.setFavoriteClickHandler(this._handleFavoritePopupClick);
     this._filmDetailsComponent.setCloseButtonClickHandler(this._hideDetails);
     this._filmDetailsComponent.setEmojiCheckHandler();
     this._filmDetailsComponent.setCommentSubmitHandlers(this._handleCommentSubmit);
     this._filmDetailsComponent.setDeleteButtonClickHandler(this._handleDeleteButtonClick);
   }
 
-  _handleWatchListClick() {
+  _handleWatchListPopupClick() {
     this._changeData(
       UserAction.UPDATE_FILM,
       UpdateType.PATCH,
@@ -93,7 +100,7 @@ class Movie {
     );
   }
 
-  _handleWatchedClick() {
+  _handleWatchedPopupClick() {
     this._changeData(
       UserAction.UPDATE_FILM,
       UpdateType.PATCH,
@@ -104,6 +111,59 @@ class Movie {
           user_details: {
             ...this._film.user_details,
             watched: !this._film.user_details.watched,
+            watchingDate: dayjs().toDate(),
+          },
+        },
+      ),
+    );
+  }
+
+  _handleFavoritePopupClick() {
+    this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.PATCH,
+      Object.assign(
+        {},
+        this._film,
+        {
+          user_details: {
+            ...this._film.user_details,
+            favorite: !this._film.user_details.favorite,
+          },
+        },
+      ),
+    );
+  }
+
+  _handleWatchListClick() {
+    this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MAJOR,
+      Object.assign(
+        {},
+        this._film,
+        {
+          user_details: {
+            ...this._film.user_details,
+            watchlist: !this._film.user_details.watchlist,
+          },
+        },
+      ),
+    );
+  }
+
+  _handleWatchedClick() {
+    this._changeData(
+      UserAction.UPDATE_FILM,
+      UpdateType.MAJOR,
+      Object.assign(
+        {},
+        this._film,
+        {
+          user_details: {
+            ...this._film.user_details,
+            watched: !this._film.user_details.watched,
+            watchingDate: dayjs().toDate(),
           },
         },
       ),
@@ -113,7 +173,7 @@ class Movie {
   _handleFavoriteClick() {
     this._changeData(
       UserAction.UPDATE_FILM,
-      UpdateType.PATCH,
+      UpdateType.MAJOR,
       Object.assign(
         {},
         this._film,

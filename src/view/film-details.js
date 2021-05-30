@@ -66,9 +66,9 @@ class FilmDetails extends SmartView {
 
   getTemplate() {
     const {
-      film_info: { title, rating, poster, director, writers, actors, ageRating, runtime, genres, description,
+      filmInfo: { title, alternativeTitle, rating, poster, director, writers, actors, ageRating, runtime, genres, description,
         release: { date, country } },
-      user_details: { watchlist, watched, favorite } } = this._film;
+      userDetails: { watchlist, watched, favorite } } = this._film;
 
     const genresTemplate = createFilmGenresTemplate(genres);
     const releaseDate = humanizeDate(date);
@@ -92,7 +92,7 @@ class FilmDetails extends SmartView {
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
                   <h3 class="film-details__title">${title}</h3>
-                  <p class="film-details__title-original">Original: ${title}</p>
+                  <p class="film-details__title-original">Original: ${alternativeTitle}</p>
                 </div>
                 <div class="film-details__rating">
                   <p class="film-details__total-rating">${rating}</p>

@@ -91,9 +91,9 @@ class Movie {
         {},
         this._film,
         {
-          user_details: {
-            ...this._film.user_details,
-            watchlist: !this._film.user_details.watchlist,
+          userDetails: {
+            ...this._film.userDetails,
+            watchlist: !this._film.userDetails.watchlist,
           },
         },
       ),
@@ -108,9 +108,9 @@ class Movie {
         {},
         this._film,
         {
-          user_details: {
-            ...this._film.user_details,
-            watched: !this._film.user_details.watched,
+          userDetails: {
+            ...this._film.userDetails,
+            watched: !this._film.userDetails.watched,
             watchingDate: dayjs().toDate(),
           },
         },
@@ -126,9 +126,9 @@ class Movie {
         {},
         this._film,
         {
-          user_details: {
-            ...this._film.user_details,
-            favorite: !this._film.user_details.favorite,
+          userDetails: {
+            ...this._film.userDetails,
+            favorite: !this._film.userDetails.favorite,
           },
         },
       ),
@@ -143,9 +143,9 @@ class Movie {
         {},
         this._film,
         {
-          user_details: {
-            ...this._film.user_details,
-            watchlist: !this._film.user_details.watchlist,
+          userDetails: {
+            ...this._film.userDetails,
+            watchlist: !this._film.userDetails.watchlist,
           },
         },
       ),
@@ -160,9 +160,9 @@ class Movie {
         {},
         this._film,
         {
-          user_details: {
-            ...this._film.user_details,
-            watched: !this._film.user_details.watched,
+          userDetails: {
+            ...this._film.userDetails,
+            watched: !this._film.userDetails.watched,
             watchingDate: dayjs().toDate(),
           },
         },
@@ -178,9 +178,9 @@ class Movie {
         {},
         this._film,
         {
-          user_details: {
-            ...this._film.user_details,
-            favorite: !this._film.user_details.favorite,
+          userDetails: {
+            ...this._film.userDetails,
+            favorite: !this._film.userDetails.favorite,
           },
         },
       ),

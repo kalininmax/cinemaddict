@@ -21,8 +21,8 @@ class FilmCard extends AbstractView {
 
   getTemplate() {
     const { comments,
-      film_info: { title, rating, poster, runtime, genres, description, release: { date } },
-      user_details: { watchlist, watched, favorite } } = this._film;
+      filmInfo: { title, rating, poster, runtime, genres, description, release: { date } },
+      userDetails: { watchlist, watched, favorite } } = this._film;
     const watchlistClass = watchlist ? 'film-card__controls-item--active' : '';
     const watchedClass = watched ? 'film-card__controls-item--active' : '';
     const favoriteClass = favorite ? 'film-card__controls-item--active' : '';

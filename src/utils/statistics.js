@@ -13,19 +13,19 @@ const CHART_BAR = {
 };
 
 const filmsToFilterMap = {
-  'all-time': (films) => films.filter(({ user_details: { watched } }) => watched),
+  'all-time': (films) => films.filter(({ userDetails: { watched } }) => watched),
   today: (films) => films
-    .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().subtract(1, 'day')),
+    .filter(({ userDetails: { watched } }) => watched)
+    .filter(({ userDetails: { watchingDate } }) => watchingDate > dayjs().subtract(1, 'day')),
   week: (films) => films
-    .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().subtract(7, 'day')),
+    .filter(({ userDetails: { watched } }) => watched)
+    .filter(({ userDetails: { watchingDate } }) => watchingDate > dayjs().subtract(7, 'day')),
   month: (films) => films
-    .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().subtract(30, 'day')),
+    .filter(({ userDetails: { watched } }) => watched)
+    .filter(({ userDetails: { watchingDate } }) => watchingDate > dayjs().subtract(30, 'day')),
   year: (films) => films
-    .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().subtract(365, 'day')),
+    .filter(({ userDetails: { watched } }) => watched)
+    .filter(({ userDetails: { watchingDate } }) => watchingDate > dayjs().subtract(365, 'day')),
 };
 
 const getTotalDuration = (films) => {
@@ -34,7 +34,7 @@ const getTotalDuration = (films) => {
   }
 
   return films
-    .map(({ film_info: { runtime } }) => runtime)
+    .map(({ filmInfo: { runtime } }) => runtime)
     .reduce((a, b) => a + b, 0);
 };
 
@@ -42,7 +42,7 @@ const getGenresStatistics = (films) => {
   const genresStatistics = {};
 
   films
-    .reduce((acc, film) => acc.concat(film.film_info.genres), [])
+    .reduce((acc, film) => acc.concat(film.filmInfo.genres), [])
     .forEach((genre) => {
       if (genresStatistics[genre]) {
         genresStatistics[genre]++;

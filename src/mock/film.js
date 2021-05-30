@@ -47,11 +47,14 @@ const generateWatchingDate = () => {
 
 const generateFilm = () => {
   const watchingDate = generateWatchingDate();
+  const title = getRandomElement(TITLES);
+  const titleOriginal = title + ' (original)';
   return {
     id: nanoid(),
     comments: getCommentIds(),
-    film_info: {
-      title: getRandomElement(TITLES),
+    filmInfo: {
+      title: title,
+      alternativeTitle: titleOriginal,
       rating: getRandomNumber(RATING.min, RATING.max, 1),
       poster: getRandomElement(POSTERS),
       ageRating: getRandomElement(AGE_RATING),
@@ -66,7 +69,7 @@ const generateFilm = () => {
       genres: generateGenres(),
       description: generateDescription(),
     },
-    user_details: {
+    userDetails: {
       watchlist: Boolean(getRandomNumber(0, 1)),
       watched: Boolean(watchingDate),
       watchingDate: watchingDate,

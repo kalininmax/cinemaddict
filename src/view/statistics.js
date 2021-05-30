@@ -2,7 +2,7 @@ import Chart from 'chart.js';
 import { getHourFromMin } from '../utils/film';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import SmartView from './smart';
-import { filmsToFilterMap, getTotalDuration, getTopGenre, getGenresStatistics, CHART_BAR } from '../utils/statistics';
+import { filmsToFilterMap, getTotalDuration, getTopGenre, getGenresStatistics, getUserRank, CHART_BAR } from '../utils/statistics';
 import { StatsDate } from '../const';
 
 const renderStatisticsChart = (films, statisticsCtx) => {
@@ -111,15 +111,16 @@ const createStatsFilterTemplate = (currentFilter) => {
 </form>`;
 };
 
-const createStatisticsTemplate = (films, currentFilter) => {
+const createStatisticsTemplate = (films, currentFilter, watchedFilms) => {
   const totalDuration = getHourFromMin(getTotalDuration(films));
   const topGenre = getTopGenre(films);
+  const userRank = getUserRank(watchedFilms);
 
   return `<section class="statistic">
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-      <span class="statistic__rank-label">Movie buff</span>
+      <span class="statistic__rank-label">${userRank}</span>
     </p>
 
     ${createStatsFilterTemplate(currentFilter)}
@@ -153,10 +154,11 @@ class Statistics extends SmartView {
     super();
 
     this._films = films;
+    this._watchedFilms = films.filter(({ userDetails: { watched } }) => watched);
 
     this._currentFilter = StatsDate.ALL_TIME.type;
 
-    this._data = filmsToFilterMap[this._currentFilter](this._films);
+    this._data = filmsToFilterMap[this._currentFilter](this._watchedFilms);
     this._chart = null;
 
 
@@ -171,14 +173,14 @@ class Statistics extends SmartView {
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._data, this._currentFilter);
+    return createStatisticsTemplate(this._data, this._currentFilter, this._watchedFilms);
   }
 
   _statsFilterChangeHandler(evt) {
     evt.preventDefault();
     if (evt.target.classList.contains('statistic__filters-input')) {
       this._currentFilter = evt.target.value;
-      this._data = filmsToFilterMap[this._currentFilter](this._films);
+      this._data = filmsToFilterMap[this._currentFilter](this._watchedFilms);
       this.updateElement();
     }
   }

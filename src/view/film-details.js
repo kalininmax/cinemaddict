@@ -180,7 +180,6 @@ class FilmDetails extends SmartView {
         evt.srcElement.setCustomValidity(ErrorMessage.COMMENT);
         evt.srcElement.reportValidity();
       } else {
-        console.log(this._data);
         this._callback.commentSubmit(this._data);
         document.removeEventListener('keyup', this._commentSubmitHandler);
       }
@@ -241,7 +240,6 @@ class FilmDetails extends SmartView {
   _watchListClickHandler(evt) {
     evt.preventDefault();
     this._callback.watchListClick();
-
   }
 
   setWatchListClickHandler(callback) {
@@ -252,7 +250,6 @@ class FilmDetails extends SmartView {
   _watchedClickHandler(evt) {
     evt.preventDefault();
     this._callback.watchedClick();
-
   }
 
   setWatchedClickHandler(callback) {
@@ -263,7 +260,6 @@ class FilmDetails extends SmartView {
   _favoriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.favoriteClick();
-
   }
 
   setFavoriteClickHandler(callback) {

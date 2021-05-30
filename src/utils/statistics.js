@@ -14,11 +14,31 @@ const CHART_BAR = {
 };
 
 const filmsToFilterMap = {
-  'all-time': (films) => films.filter(({ userDetails: { watched } }) => watched),
-  today: (films) => films.filter(({ userDetails: { watchingDate } }) => new Date(watchingDate) > dayjs().subtract(1, 'day')),
-  week: (films) => films.filter(({ userDetails: { watchingDate } }) => new Date(watchingDate) > dayjs().subtract(7, 'day')),
-  month: (films) => films.filter(({ userDetails: { watchingDate } }) => new Date(watchingDate) > dayjs().subtract(30, 'day')),
-  year: (films) => films.filter(({ userDetails: { watchingDate } }) => new Date(watchingDate) > dayjs().subtract(365, 'day')),
+  'all-time': (films) => {
+    return films.filter(({ userDetails: { watched } }) => {
+      return watched;
+    });
+  },
+  today: (films) => {
+    return films.filter(({ userDetails: { watchingDate } }) => {
+      return new Date(watchingDate) > dayjs().subtract(1, 'day');
+    });
+  },
+  week: (films) => {
+    return films.filter(({ userDetails: { watchingDate } }) => {
+      return new Date(watchingDate) > dayjs().subtract(7, 'day');
+    });
+  },
+  month: (films) => {
+    return films.filter(({ userDetails: { watchingDate } }) => {
+      return new Date(watchingDate) > dayjs().subtract(30, 'day');
+    });
+  },
+  year: (films) => {
+    return films.filter(({ userDetails: { watchingDate } }) => {
+      return new Date(watchingDate) > dayjs().subtract(365, 'day');
+    });
+  },
 };
 
 const getTotalDuration = (films) => {
@@ -27,8 +47,12 @@ const getTotalDuration = (films) => {
   }
 
   return films
-    .map(({ filmInfo: { runtime } }) => runtime)
-    .reduce((a, b) => a + b, 0);
+    .map(({ filmInfo: { runtime } }) => {
+      return runtime;
+    })
+    .reduce((a, b) => {
+      return a + b;
+    }, 0);
 };
 
 const getGenresStatistics = (films) => {
@@ -53,13 +77,18 @@ const getTopGenre = (films) => {
   }
 
   const genresStatistics = getGenresStatistics(films);
-  const topGenreStatistics = Object.entries(genresStatistics).sort((a, b) => b[1] - a[1])[0];
+  const topGenreStatistics = Object.entries(genresStatistics).sort((a, b) => {
+    return b[1] - a[1];
+  })[0];
+
   const topGenreName = topGenreStatistics[0];
   return topGenreName;
 };
 
 const getUserRank = (films) => {
-  const watchedFilmsCount = films.filter((film) => film.userDetails.watched).length;
+  const watchedFilmsCount = films.filter((film) => {
+    film.userDetails.watched;
+  }).length;
 
   if (!watchedFilmsCount) {
     return false;

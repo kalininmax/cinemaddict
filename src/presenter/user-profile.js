@@ -17,7 +17,9 @@ class UserProfile {
   init() {
     const films = this._moviesModel.getMovies();
 
-    const watchedFilmsCount = films.filter((film) => film.userDetails.watched).length;
+    const watchedFilmsCount = films.filter((film) => {
+      return film.userDetails.watched;
+    }).length;
 
     if (watchedFilmsCount !== 0) {
       this._userProfileComponent = new UserProfileView(getUserRank(films));

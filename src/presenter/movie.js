@@ -219,8 +219,8 @@ class Movie {
           ),
         );
       })
-      .catch(() => {
-        console.log('Ошибка');
+      .catch((error) => {
+        throw new Error(error);
       });
   }
 

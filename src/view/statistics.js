@@ -198,7 +198,6 @@ class Statistics extends SmartView {
 
     this._chart = renderStatisticsChart(this._data, statisticsCtx);
   }
-
 }
 
 export { Statistics as default };

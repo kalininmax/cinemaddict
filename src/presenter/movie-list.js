@@ -159,7 +159,9 @@ class MovieList {
   }
 
   _renderFilms(films, container) {
-    films.forEach((film) => this._renderFilm(film, container));
+    films.forEach((film) => {
+      return this._renderFilm(film, container);
+    });
   }
 
   _renderNoFilms() {
@@ -199,7 +201,9 @@ class MovieList {
 
     Object
       .values(this._moviePresenter)
-      .forEach((presenter) => presenter.destroy());
+      .forEach((presenter) => {
+        return presenter.destroy();
+      });
     this._moviePresenter = {};
 
     remove(this._sortComponent);
@@ -233,8 +237,8 @@ class MovieList {
     }
 
 
-    this._renderFilms(films.slice(0, Math.min(filmCount, this._renderedFilmCount)));
     this._renderSort();
+    this._renderFilms(films.slice(0, Math.min(filmCount, this._renderedFilmCount)));
 
     if (filmCount > this._renderedFilmCount) {
       this._renderShowMoreButton();

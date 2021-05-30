@@ -64,7 +64,6 @@ class FilmCard extends AbstractView {
   _watchListClickHandler(evt) {
     evt.preventDefault();
     this._callback.watchListClick();
-
   }
 
   setWatchListClickHandler(callback) {
@@ -75,7 +74,6 @@ class FilmCard extends AbstractView {
   _watchedClickHandler(evt) {
     evt.preventDefault();
     this._callback.watchedClick();
-
   }
 
   setWatchedClickHandler(callback) {
@@ -86,7 +84,6 @@ class FilmCard extends AbstractView {
   _favoriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.favoriteClick();
-
   }
 
   setFavoriteClickHandler(callback) {

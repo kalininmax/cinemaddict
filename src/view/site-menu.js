@@ -12,12 +12,14 @@ const createFilterItemTemplate = (filter, currentFilterType) => {
       class="main-navigation__item ${type === currentFilterType ? `${menuActiveClass}` : ''}">
       ${name}
       ${type !== MenuItem.ALL_MOVIES ? `<span class="main-navigation__item-count">${count}</span>` : ''}
-      </a>`
+    </a>`
   );
 };
 
 const createFilterTemplate = (filters, currentFilterType) => {
-  return filters.map((filter) => createFilterItemTemplate(filter, currentFilterType)).join('');
+  return filters.map((filter) => {
+    return createFilterItemTemplate(filter, currentFilterType);
+  }).join('');
 };
 
 class SiteMenu extends AbstractView {
@@ -61,7 +63,6 @@ class SiteMenu extends AbstractView {
     this._callback.menuClick = callback;
     this.getElement().addEventListener('click', this._menuClickHandler);
   }
-
 }
 
 export { SiteMenu as default };

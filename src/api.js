@@ -21,7 +21,9 @@ class Api {
   getFilms() {
     return this._load({ url: 'movies' })
       .then(Api.toJSON)
-      .then((films) => films.map(MoviesModel.adaptToClient));
+      .then((films) => {
+        return films.map(MoviesModel.adaptToClient);
+      });
   }
 
   getComments(filmId) {

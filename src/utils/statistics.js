@@ -87,7 +87,7 @@ const getTopGenre = (films) => {
 
 const getUserRank = (films) => {
   const watchedFilmsCount = films.filter((film) => {
-    film.userDetails.watched;
+    return film.userDetails.watched;
   }).length;
 
   if (!watchedFilmsCount) {

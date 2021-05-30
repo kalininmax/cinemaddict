@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import Chart from 'chart.js';
 import { getHourFromMin } from '../utils/film';
 import ChartDataLabels from 'chartjs-plugin-datalabels';

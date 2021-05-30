@@ -220,7 +220,7 @@ class Movie {
         );
       })
       .catch(() => {
-        console.log(Ошибка);
+        console.log('Ошибка');
       });
   }
 

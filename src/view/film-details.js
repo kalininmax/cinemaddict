@@ -17,7 +17,7 @@ const createFilmCommentsTemplate = (filmComments) => {
         <p class="film-details__comment-text">${he.encode(comment)}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">${humanizeDate(date, 'relative')}</span>
+          <span class="film-details__comment-day">${humanizeDate(date, 'YYYY/MM/D HH:MM')}</span>
           <button class="film-details__comment-delete" data-comment-id="${id}">Delete</button>
         </p>
       </div>

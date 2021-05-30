@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import Chart from 'chart.js';
 import { getHourFromMin } from '../utils/film';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -154,7 +155,7 @@ class Statistics extends SmartView {
     super();
 
     this._films = films;
-    this._watchedFilms = films.filter(({ userDetails: { watched } }) => watched);
+    this._watchedFilms = this._films.filter(({ userDetails: { watched } }) => watched);
 
     this._currentFilter = StatsDate.ALL_TIME.type;
 

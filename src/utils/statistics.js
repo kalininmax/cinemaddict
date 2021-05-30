@@ -15,14 +15,10 @@ const CHART_BAR = {
 
 const filmsToFilterMap = {
   'all-time': (films) => films.filter(({ userDetails: { watched } }) => watched),
-  today: (films) => films
-    .filter(({ userDetails: { watchingDate } }) => watchingDate > dayjs().subtract(1, 'day')),
-  week: (films) => films
-    .filter(({ userDetails: { watchingDate } }) => watchingDate > dayjs().subtract(7, 'day')),
-  month: (films) => films
-    .filter(({ userDetails: { watchingDate } }) => watchingDate > dayjs().subtract(30, 'day')),
-  year: (films) => films
-    .filter(({ userDetails: { watchingDate } }) => watchingDate > dayjs().subtract(365, 'day')),
+  today: (films) => films.filter(({ userDetails: { watchingDate } }) => new Date(watchingDate) > dayjs().subtract(1, 'day')),
+  week: (films) => films.filter(({ userDetails: { watchingDate } }) => new Date(watchingDate) > dayjs().subtract(7, 'day')),
+  month: (films) => films.filter(({ userDetails: { watchingDate } }) => new Date(watchingDate) > dayjs().subtract(30, 'day')),
+  year: (films) => films.filter(({ userDetails: { watchingDate } }) => new Date(watchingDate) > dayjs().subtract(365, 'day')),
 };
 
 const getTotalDuration = (films) => {

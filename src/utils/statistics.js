@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { RankScore, RankName } from '../const';
 
 const CHART_BAR = {
   TYPE: 'horizontalBar',
@@ -15,16 +16,12 @@ const CHART_BAR = {
 const filmsToFilterMap = {
   'all-time': (films) => films.filter(({ userDetails: { watched } }) => watched),
   today: (films) => films
-    .filter(({ userDetails: { watched } }) => watched)
     .filter(({ userDetails: { watchingDate } }) => watchingDate > dayjs().subtract(1, 'day')),
   week: (films) => films
-    .filter(({ userDetails: { watched } }) => watched)
     .filter(({ userDetails: { watchingDate } }) => watchingDate > dayjs().subtract(7, 'day')),
   month: (films) => films
-    .filter(({ userDetails: { watched } }) => watched)
     .filter(({ userDetails: { watchingDate } }) => watchingDate > dayjs().subtract(30, 'day')),
   year: (films) => films
-    .filter(({ userDetails: { watched } }) => watched)
     .filter(({ userDetails: { watchingDate } }) => watchingDate > dayjs().subtract(365, 'day')),
 };
 
@@ -65,10 +62,31 @@ const getTopGenre = (films) => {
   return topGenreName;
 };
 
+const getUserRank = (films) => {
+  const watchedFilmsCount = films.filter((film) => film.userDetails.watched).length;
+
+  if (!watchedFilmsCount) {
+    return false;
+  }
+
+  if (watchedFilmsCount >= RankScore.NOVICE.MIN && watchedFilmsCount <= RankScore.NOVICE.MAX) {
+    return RankName.NOVICE;
+  }
+
+  if (watchedFilmsCount >= RankScore.FAN.MIN && watchedFilmsCount <= RankScore.FAN.MAX) {
+    return RankName.FAN;
+  }
+
+  if (watchedFilmsCount > RankScore.FAN.MAX) {
+    return RankName.MOVIE_BUFF;
+  }
+};
+
 export {
   filmsToFilterMap,
   getTotalDuration,
   getGenresStatistics,
   getTopGenre,
+  getUserRank,
   CHART_BAR
 };

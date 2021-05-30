@@ -4,7 +4,6 @@ import he from 'he';
 import SmartView from './smart';
 import { humanizeDate, getHourFromMin } from '../utils/film';
 import { render, createElement, RenderPosition } from '../utils/render';
-import { EMOTIONS } from '../mock/comment';
 import { ErrorMessage } from '../const';
 
 const createFilmGenresTemplate = (genres) => {

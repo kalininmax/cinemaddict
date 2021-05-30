@@ -1,4 +1,3 @@
-import { generateFilm } from './mock/film';
 import { render, RenderPosition } from './utils/render';
 import HeaderProfileView from './view/header-profile';
 import FooterStatisticView from './view/footer-statistics';

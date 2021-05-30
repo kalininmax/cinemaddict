@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import FilmCardView from '../view/film-card';
 import FilmDetailsView from '../view/film-details';
-import { allComments } from '../mock/comment';
 import { render, replace, remove, RenderPosition } from '../utils/render';
 import { UserAction, UpdateType } from '../const';
 import CommentsModel from '../model/comments';

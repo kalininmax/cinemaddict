@@ -136,7 +136,7 @@ class Movie {
   _handleWatchListClick() {
     this._changeData(
       UserAction.UPDATE_FILM,
-      UpdateType.MAJOR,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._film,
@@ -153,7 +153,7 @@ class Movie {
   _handleWatchedClick() {
     this._changeData(
       UserAction.UPDATE_FILM,
-      UpdateType.MAJOR,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._film,
@@ -171,7 +171,7 @@ class Movie {
   _handleFavoriteClick() {
     this._changeData(
       UserAction.UPDATE_FILM,
-      UpdateType.MAJOR,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._film,
@@ -220,7 +220,7 @@ class Movie {
         );
       })
       .catch(() => {
-        // this.setViewState(PopupState.ABORTING);
+        console.log(Ошибка);
       });
   }
 
@@ -250,6 +250,7 @@ class Movie {
   }
 
   _hideDetails() {
+    this._commentsModel.setComments([]);
     remove(this._filmDetailsComponent);
     this._filmDetailsComponent = null;
     document.body.classList.remove('hide-overflow');

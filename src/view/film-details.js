@@ -1,10 +1,10 @@
-import { nanoid } from 'nanoid';
-import dayjs from 'dayjs';
 import he from 'he';
 import SmartView from './smart';
 import { humanizeDate, getHourFromMin } from '../utils/film';
 import { render, createElement, RenderPosition } from '../utils/render';
 import { ErrorMessage } from '../const';
+
+const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
 
 const createFilmGenresTemplate = (genres) => {
   let template = '';
@@ -178,10 +178,7 @@ class FilmDetails extends SmartView {
   _commentInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
-      id: nanoid(),
-      author: 'MyUserName',
       comment: evt.target.value,
-      date: dayjs().toDate(),
     }, true);
   }
 
@@ -285,9 +282,8 @@ class FilmDetails extends SmartView {
   _deleteButtonClickHandler(evt) {
     evt.preventDefault();
     const commentId = evt.target.dataset.commentId;
-    const comment = this._comments.filter((comment) => comment.id === commentId)[0];
 
-    this._callback.deleteButtonClick(comment);
+    this._callback.deleteButtonClick(commentId);
   }
 
   setDeleteButtonClickHandler(callback) {

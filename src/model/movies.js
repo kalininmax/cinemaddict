@@ -6,8 +6,10 @@ class Movies extends Observer {
     this._movies = [];
   }
 
-  setMovies(movies) {
+  setMovies(movies, updateType) {
     this._movies = movies.slice();
+
+    this._notify(updateType);
   }
 
   getMovies() {

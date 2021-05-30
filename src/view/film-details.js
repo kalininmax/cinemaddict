@@ -6,15 +6,6 @@ import { ErrorMessage } from '../const';
 
 const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
 
-const createFilmGenresTemplate = (genres) => {
-  let template = '';
-  genres.forEach((genre) => {
-    template += `<span class="film-details__genre">${genre}</span>`;
-  });
-
-  return template;
-};
-
 const createFilmCommentsTemplate = (filmComments) => {
   let template = '';
   filmComments.forEach(({ author, comment, date, emotion, id }) => {
@@ -69,7 +60,7 @@ class FilmDetails extends SmartView {
         release: { date, country } },
       userDetails: { watchlist, watched, favorite } } = this._film;
 
-    const genresTemplate = createFilmGenresTemplate(genres);
+    const filmGenres = genres.join(', ');
     const releaseDate = humanizeDate(date);
     const commentsTemplate = createFilmCommentsTemplate(this._comments);
     const emotionsListTemplate = createEmojiListTemplate(EMOTIONS);
@@ -84,7 +75,7 @@ class FilmDetails extends SmartView {
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
               <img class="film-details__poster-img" src="${poster}" alt="">
-              <p class="film-details__age">${ageRating}</p>
+              <p class="film-details__age">${ageRating}+</p>
             </div>
 
             <div class="film-details__info">
@@ -125,7 +116,7 @@ class FilmDetails extends SmartView {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Genres</td>
-                  <td class="film-details__cell">${genresTemplate}</td>
+                  <td class="film-details__cell">${filmGenres}</td>
                 </tr>
               </table>
 
@@ -189,6 +180,7 @@ class FilmDetails extends SmartView {
         evt.srcElement.setCustomValidity(ErrorMessage.COMMENT);
         evt.srcElement.reportValidity();
       } else {
+        console.log(this._data);
         this._callback.commentSubmit(this._data);
         document.removeEventListener('keyup', this._commentSubmitHandler);
       }

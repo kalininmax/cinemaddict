@@ -1,6 +1,6 @@
 import AbstractView from './abstract';
 
-export default class Loading extends AbstractView {
+class Loading extends AbstractView {
   constructor() {
     super();
   }
@@ -11,3 +11,5 @@ export default class Loading extends AbstractView {
     </section>`;
   }
 }
+
+export { Loading as default };

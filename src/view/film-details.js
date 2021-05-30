@@ -175,7 +175,7 @@ class FilmDetails extends SmartView {
 
   _commentSubmitHandler(evt) {
     evt.preventDefault();
-    if (evt.ctrlKey && evt.code === 'Enter') {
+    if ((evt.ctrlKey || evt.metaKey) && evt.code === 'Enter') {
       if (!this._data.comment || !this._data.emotion) {
         evt.srcElement.setCustomValidity(ErrorMessage.COMMENT);
         evt.srcElement.reportValidity();

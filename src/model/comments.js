@@ -23,9 +23,9 @@ class Comments extends Observer {
     this._notify(updateType, update);
   }
 
-  deleteComment(updateType, update) {
+  deleteComment(updateType, commentId) {
     const index = this._comments.findIndex((comment) => {
-      return comment.id === update.id;
+      return comment.id === commentId;
     });
 
     if (index === -1) {

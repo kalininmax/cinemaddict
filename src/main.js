@@ -33,8 +33,8 @@ api.getFilms()
   .then((films) => {
     moviesModel.setMovies(UpdateType.INIT, films);
     render(footerStats, new FooterStatisticView(films.length), RenderPosition.BEFOREEND);
+  })
+  .catch(() => {
+    moviesModel.setMovies(UpdateType.INIT, []);
+    render(footerStats, new FooterStatisticView(0), RenderPosition.BEFOREEND);
   });
-// .catch(() => {
-//   moviesModel.setMovies(UpdateType.INIT, []);
-//   render(footerStats, new FooterStatisticView(0), RenderPosition.BEFOREEND);
-// });

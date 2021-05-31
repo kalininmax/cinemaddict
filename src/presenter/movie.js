@@ -76,8 +76,7 @@ class Movie {
     this._filmDetailsComponent.setWatchedClickHandler(this._handleWatchedPopupClick);
     this._filmDetailsComponent.setFavoriteClickHandler(this._handleFavoritePopupClick);
     this._filmDetailsComponent.setCloseButtonClickHandler(this._hideDetails);
-    this._filmDetailsComponent.setEmojiCheckHandler();
-    this._filmDetailsComponent.setCommentSubmitHandlers(this._handleCommentSubmit);
+    this._filmDetailsComponent.setCommentSubmitHandler(this._handleCommentSubmit);
     this._filmDetailsComponent.setDeleteButtonClickHandler(this._handleDeleteButtonClick);
   }
 
@@ -185,19 +184,20 @@ class Movie {
     );
   }
 
-  _handleCommentSubmit(comment) {
-    this._changeData(
-      UserAction.UPDATE_FILM,
-      UpdateType.PATCH,
-      Object.assign(
-        {},
-        this._film,
-        {
-          comments: [...this._film.comments, comment.id],
-        },
-      ),
-    );
-    this._allCommentsModel.addComment(UpdateType.PATCH, comment);
+  _handleCommentSubmit(filmId, comment) {
+    this._api.addComment(filmId, comment)
+      .then(() => {
+        this._commentsModel.addComment(UpdateType.PATCH, comment);
+
+        this._changeData(
+          UserAction.UPDATE_FILM,
+          UpdateType.PATCH,
+          this._film,
+        );
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
   }
 
   _handleDeleteButtonClick(id) {

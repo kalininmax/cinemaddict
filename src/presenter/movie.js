@@ -185,6 +185,7 @@ class Movie {
   }
 
   _handleCommentSubmit(filmId, comment) {
+    this._filmDetailsComponent.toggleCommentFormDisable();
     this._api.addComment(filmId, comment)
       .then(() => {
         this._commentsModel.addComment(UpdateType.PATCH, comment);
@@ -195,12 +196,14 @@ class Movie {
           this._film,
         );
       })
-      .catch((error) => {
-        throw new Error(error);
+      .catch(() => {
+        this._filmDetailsComponent.toggleCommentFormDisable();
+        this._filmDetailsComponent.toggleShakeEffect();
       });
   }
 
   _handleDeleteButtonClick(id) {
+    this._filmDetailsComponent.toggleDeleteButtonDisable(id);
     this._api.deleteComment(id)
       .then(() => {
         this._commentsModel.deleteComment(UpdateType.PATCH, id);
@@ -219,8 +222,9 @@ class Movie {
           ),
         );
       })
-      .catch((error) => {
-        throw new Error(error);
+      .catch(() => {
+        this._filmDetailsComponent.toggleDeleteButtonDisable(id);
+        this._filmDetailsComponent.toggleShakeEffect();
       });
   }
 

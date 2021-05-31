@@ -5,6 +5,7 @@ import { render, createElement, RenderPosition } from '../utils/render';
 import { ErrorMessage } from '../const';
 
 const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
+const SHAKE_TIMEOUT = 1000;
 
 const createFilmCommentsTemplate = (filmComments) => {
   let template = '';
@@ -44,6 +45,7 @@ class FilmDetails extends SmartView {
     super();
     this._film = film;
     this._comments = comments;
+    this._popupForm = this.getElement().querySelector('form');
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
     this._watchListClickHandler = this._watchListClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -226,6 +228,7 @@ class FilmDetails extends SmartView {
     if (evt.target.dataset.commentId) {
       evt.preventDefault();
       const commentId = evt.target.dataset.commentId;
+
       this._callback.deleteButtonClick(commentId);
     }
   }
@@ -262,13 +265,15 @@ class FilmDetails extends SmartView {
   }
 
   _commentSubmitHandler(evt) {
+    const commentForm = this.getElement().querySelector('form');
+    const commentTextarea = commentForm.elements['comment'];
+
     if ((evt.ctrlKey || evt.metaKey) && evt.code === 'Enter') {
-      if (!this._data.comment || !this._data.emotion) {
-        evt.srcElement.setCustomValidity(ErrorMessage.COMMENT);
-        evt.srcElement.reportValidity();
-      } else {
+      if (this._data.comment && this._data.emotion) {
         this._callback.commentSubmit(this._film.id, this._data);
-        document.removeEventListener('keyup', this._commentSubmitHandler);
+      } else {
+        commentTextarea.setCustomValidity(ErrorMessage.COMMENT);
+        commentTextarea.reportValidity();
       }
     }
   }
@@ -276,6 +281,29 @@ class FilmDetails extends SmartView {
   setCommentSubmitHandler(callback) {
     this._callback.commentSubmit = callback;
     document.addEventListener('keyup', this._commentSubmitHandler);
+  }
+
+  toggleCommentFormDisable() {
+    const commentTextarea = this._popupForm.elements['comment'];
+    const emojiInputs = this._popupForm.elements['comment-emoji'];
+
+    commentTextarea.disabled = !commentTextarea.disabled;
+    emojiInputs.forEach((input) => {
+      input.disabled = !input.disabled;
+    });
+  }
+
+  toggleDeleteButtonDisable(id) {
+    const deleteButton = this._popupForm.querySelector(`[data-comment-id="${id}"]`);
+    deleteButton.disabled = !deleteButton.disabled;
+    deleteButton.textContent = deleteButton.disabled ? 'Deleting...' : 'Delete';
+  }
+
+  toggleShakeEffect() {
+    this.getElement().classList.add('shake');
+    setTimeout(() => {
+      this.getElement().classList.remove('shake');
+    }, SHAKE_TIMEOUT);
   }
 }
 

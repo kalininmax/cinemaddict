@@ -24,23 +24,6 @@ class Sort extends AbstractView {
     }
 
     this._callback.sortTypeChange(evt.target.dataset.sortType);
-
-    switch (evt.target.dataset.sortType) {
-      case SortType.DATE_DOWN:
-        evt.target.dataset.sortType = SortType.DATE_UP;
-        break;
-      case SortType.DATE_UP:
-        evt.target.dataset.sortType = SortType.DATE_DOWN;
-        break;
-      case SortType.RATING_DOWN:
-        evt.target.dataset.sortType = SortType.RATING_UP;
-        break;
-      case SortType.RATING_UP:
-        evt.target.dataset.sortType = SortType.RATING_DOWN;
-        break;
-      default:
-        break;
-    }
   }
 
   setSortTypeChangeHandler(callback) {

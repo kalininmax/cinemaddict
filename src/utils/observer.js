@@ -8,11 +8,15 @@ class Observer {
   }
 
   removeObserver(observer) {
-    this._observers = this._observers.filter((existedObserver) => existedObserver !== observer);
+    this._observers = this._observers.filter((existedObserver) => {
+      return existedObserver !== observer;
+    });
   }
 
   _notify(event, payload) {
-    this._observers.forEach((observer) => observer(event, payload));
+    this._observers.forEach((observer) => {
+      return observer(event, payload);
+    });
   }
 }
 

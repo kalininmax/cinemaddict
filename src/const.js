@@ -16,6 +16,7 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
 const FilterType = {
@@ -60,6 +61,23 @@ const ErrorMessage = {
   COMMENT: 'Пожалуйста, выберите эмоцию и напишите текст комментария',
 };
 
+const RankScore = {
+  NOVICE: {
+    MIN: 1,
+    MAX: 10,
+  },
+  FAN: {
+    MIN: 11,
+    MAX: 20,
+  },
+};
+
+const RankName = {
+  NOVICE: 'Novice',
+  FAN: 'Fan',
+  MOVIE_BUFF: 'Movie Buff',
+};
+
 export {
   SortType,
   UserAction,
@@ -67,5 +85,7 @@ export {
   FilterType,
   MenuItem,
   StatsDate,
-  ErrorMessage
+  ErrorMessage,
+  RankScore,
+  RankName
 };

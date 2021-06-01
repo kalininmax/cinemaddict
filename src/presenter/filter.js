@@ -1,16 +1,14 @@
-import FilterView from '../view/site-menu';
+import SiteMenuView from '../view/site-menu';
 import { render, RenderPosition, replace, remove } from '../utils/render';
 import { filter } from '../utils/filter';
 import { FilterType, UpdateType, MenuItem } from '../const';
 
 class Filter {
-  constructor(filterContainer, filterModel, moviesModel, moviePresenter, StatsView) {
+  constructor(filterContainer, filterModel, moviesModel, movieListPresenter) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
     this._moviesModel = moviesModel;
-    this._movieListPresenter = moviePresenter;
-
-    this._statsComponent = StatsView;
+    this._movieListPresenter = movieListPresenter;
 
     this._filterComponent = null;
 
@@ -25,7 +23,7 @@ class Filter {
     const filters = this._getFilters();
     const prevFilterComponent = this._filterComponent;
 
-    this._filterComponent = new FilterView(filters, this._filterModel.getFilter());
+    this._filterComponent = new SiteMenuView(filters, this._filterModel.getFilter());
     this._filterComponent.setMenuClickHandler(this._handleMenuClick);
 
     if (prevFilterComponent === null) {

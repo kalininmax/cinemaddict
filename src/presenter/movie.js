@@ -1,16 +1,17 @@
 import dayjs from 'dayjs';
 import FilmCardView from '../view/film-card';
 import FilmDetailsView from '../view/film-details';
-import { allComments } from '../mock/comment';
 import { render, replace, remove, RenderPosition } from '../utils/render';
 import { UserAction, UpdateType } from '../const';
 import CommentsModel from '../model/comments';
 
 class Movie {
-  constructor(filmListComponent, changeData) {
+  constructor(filmListComponent, changeData, api) {
     this._filmListComponent = filmListComponent;
     this._filmListContainer = filmListComponent.getElement().querySelector('.films-list__container');
     this._changeData = changeData;
+    this._api = api;
+    this._commentsModel = new CommentsModel();
 
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
@@ -18,6 +19,7 @@ class Movie {
     this._showDetails = this._showDetails.bind(this);
     this._hideDetails = this._hideDetails.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._renderPopup = this._renderPopup.bind(this);
 
     this._handleWatchListClick = this._handleWatchListClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
@@ -31,11 +33,7 @@ class Movie {
     this._handleDeleteButtonClick = this._handleDeleteButtonClick.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
-    this._allCommentsModel = new CommentsModel();
-    this._allCommentsModel.setComments(allComments);
-    this._allCommentsModel.addObserver(this._handleModelEvent);
-    this._filmCommentsModel = new CommentsModel();
-    this._filmCommentsModel.addObserver(this._handleModelEvent);
+    this._commentsModel.addObserver(this._handleModelEvent);
   }
 
   init(film) {
@@ -78,8 +76,7 @@ class Movie {
     this._filmDetailsComponent.setWatchedClickHandler(this._handleWatchedPopupClick);
     this._filmDetailsComponent.setFavoriteClickHandler(this._handleFavoritePopupClick);
     this._filmDetailsComponent.setCloseButtonClickHandler(this._hideDetails);
-    this._filmDetailsComponent.setEmojiCheckHandler();
-    this._filmDetailsComponent.setCommentSubmitHandlers(this._handleCommentSubmit);
+    this._filmDetailsComponent.setCommentSubmitHandler(this._handleCommentSubmit);
     this._filmDetailsComponent.setDeleteButtonClickHandler(this._handleDeleteButtonClick);
   }
 
@@ -91,9 +88,9 @@ class Movie {
         {},
         this._film,
         {
-          user_details: {
-            ...this._film.user_details,
-            watchlist: !this._film.user_details.watchlist,
+          userDetails: {
+            ...this._film.userDetails,
+            watchlist: !this._film.userDetails.watchlist,
           },
         },
       ),
@@ -108,9 +105,9 @@ class Movie {
         {},
         this._film,
         {
-          user_details: {
-            ...this._film.user_details,
-            watched: !this._film.user_details.watched,
+          userDetails: {
+            ...this._film.userDetails,
+            watched: !this._film.userDetails.watched,
             watchingDate: dayjs().toDate(),
           },
         },
@@ -126,9 +123,9 @@ class Movie {
         {},
         this._film,
         {
-          user_details: {
-            ...this._film.user_details,
-            favorite: !this._film.user_details.favorite,
+          userDetails: {
+            ...this._film.userDetails,
+            favorite: !this._film.userDetails.favorite,
           },
         },
       ),
@@ -138,14 +135,14 @@ class Movie {
   _handleWatchListClick() {
     this._changeData(
       UserAction.UPDATE_FILM,
-      UpdateType.MAJOR,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._film,
         {
-          user_details: {
-            ...this._film.user_details,
-            watchlist: !this._film.user_details.watchlist,
+          userDetails: {
+            ...this._film.userDetails,
+            watchlist: !this._film.userDetails.watchlist,
           },
         },
       ),
@@ -155,14 +152,14 @@ class Movie {
   _handleWatchedClick() {
     this._changeData(
       UserAction.UPDATE_FILM,
-      UpdateType.MAJOR,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._film,
         {
-          user_details: {
-            ...this._film.user_details,
-            watched: !this._film.user_details.watched,
+          userDetails: {
+            ...this._film.userDetails,
+            watched: !this._film.userDetails.watched,
             watchingDate: dayjs().toDate(),
           },
         },
@@ -173,51 +170,58 @@ class Movie {
   _handleFavoriteClick() {
     this._changeData(
       UserAction.UPDATE_FILM,
-      UpdateType.MAJOR,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._film,
         {
-          user_details: {
-            ...this._film.user_details,
-            favorite: !this._film.user_details.favorite,
+          userDetails: {
+            ...this._film.userDetails,
+            favorite: !this._film.userDetails.favorite,
           },
         },
       ),
     );
   }
 
-  _handleCommentSubmit(comment) {
-    this._changeData(
-      UserAction.UPDATE_FILM,
-      UpdateType.PATCH,
-      Object.assign(
-        {},
-        this._film,
-        {
-          comments: [...this._film.comments, comment.id],
-        },
-      ),
-    );
-    this._allCommentsModel.addComment(UpdateType.PATCH, comment);
+  _handleCommentSubmit(filmId, comment) {
+    this._api.addComment(filmId, comment)
+      .then(() => {
+        this._commentsModel.addComment(UpdateType.PATCH, comment);
+
+        this._changeData(
+          UserAction.UPDATE_FILM,
+          UpdateType.PATCH,
+          this._film,
+        );
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
   }
 
-  _handleDeleteButtonClick(comment) {
-    this._allCommentsModel.deleteComment(UpdateType.PATCH, comment);
+  _handleDeleteButtonClick(id) {
+    this._api.deleteComment(id)
+      .then(() => {
+        this._commentsModel.deleteComment(UpdateType.PATCH, id);
 
-    this._changeData(
-      UserAction.UPDATE_FILM,
-      UpdateType.PATCH,
-      Object.assign(
-        {},
-        this._film,
-        {
-          comments: this._film.comments.filter((filmComment) => {
-            return filmComment !== comment.id;
-          }),
-        },
-      ),
-    );
+        this._changeData(
+          UserAction.UPDATE_FILM,
+          UpdateType.PATCH,
+          Object.assign(
+            {},
+            this._film,
+            {
+              comments: this._film.comments.filter((filmComment) => {
+                return filmComment !== id;
+              }),
+            },
+          ),
+        );
+      })
+      .catch((error) => {
+        throw new Error(error);
+      });
   }
 
   destroy() {
@@ -226,9 +230,19 @@ class Movie {
   }
 
   _showDetails() {
-    const comments = this._allCommentsModel.getComments().filter((comment) => this._film.comments.includes(comment.id));
-    this._filmCommentsModel.setComments(comments);
-    this._filmDetailsComponent = new FilmDetailsView(this._film, this._filmCommentsModel.getComments());
+    this._api.getComments(this._film.id)
+      .then((comments) => {
+        this._commentsModel.setComments(comments);
+        this._renderPopup(this._commentsModel.getComments());
+      })
+      .catch(() => {
+        this._commentsModel.setComments([]);
+        this._renderPopup(this._commentsModel.getComments());
+      });
+  }
+
+  _renderPopup(comments) {
+    this._filmDetailsComponent = new FilmDetailsView(this._film, comments);
     render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this._onEscKeyDown);
@@ -236,6 +250,7 @@ class Movie {
   }
 
   _hideDetails() {
+    this._commentsModel.setComments([]);
     remove(this._filmDetailsComponent);
     this._filmDetailsComponent = null;
     document.body.classList.remove('hide-overflow');

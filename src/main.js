@@ -1,31 +1,40 @@
-import { generateFilm } from './mock/film';
 import { render, RenderPosition } from './utils/render';
-import HeaderProfileView from './view/header-profile';
+import UserProfilePresenter from './presenter/user-profile';
 import FooterStatisticView from './view/footer-statistics';
 import MovieListPresenter from './presenter/movie-list';
 import FilterPresenter from './presenter/filter';
 import MoviesModel from './model/movies';
 import FilterModel from './model/filter';
+import Api from './api';
+import { UpdateType } from './const';
 
-const FILMS_COUNT = 5;
+const AUTHORIZATION = 'Basic helpmepls001';
+const END_POINT = 'https://14.ecmascript.pages.academy/cinemaddict';
 
-const films = new Array(FILMS_COUNT).fill().map(generateFilm);
+const api = new Api(END_POINT, AUTHORIZATION);
 
 const moviesModel = new MoviesModel();
-moviesModel.setMovies(films);
-
 const filterModel = new FilterModel();
 
 const headerElement = document.querySelector('.header');
 const mainElement = document.querySelector('.main');
 const footerStats = document.querySelector('.footer__statistics');
 
-const movieListPresenter = new MovieListPresenter(mainElement, moviesModel, filterModel);
+const movieListPresenter = new MovieListPresenter(mainElement, moviesModel, filterModel, api);
 const filterPresenter = new FilterPresenter(mainElement, filterModel, moviesModel, movieListPresenter);
+const userProfilePresenter = new UserProfilePresenter(headerElement, moviesModel);
 
-render(headerElement, new HeaderProfileView(), RenderPosition.BEFOREEND);
-render(footerStats, new FooterStatisticView(films.length), RenderPosition.BEFOREEND);
 
 filterPresenter.init();
 movieListPresenter.init();
+userProfilePresenter.init();
 
+api.getFilms()
+  .then((films) => {
+    moviesModel.setMovies(UpdateType.INIT, films);
+    render(footerStats, new FooterStatisticView(films.length), RenderPosition.BEFOREEND);
+  })
+  .catch(() => {
+    moviesModel.setMovies(UpdateType.INIT, []);
+    render(footerStats, new FooterStatisticView(0), RenderPosition.BEFOREEND);
+  });

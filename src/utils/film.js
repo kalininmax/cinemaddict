@@ -35,8 +35,8 @@ const getWeightForNullDate = (dateA, dateB) => {
 };
 
 const sortFilmDateUp = (filmA, filmB) => {
-  const { film_info: { release: { date: dateA } } } = filmA;
-  const { film_info: { release: { date: dateB } } } = filmB;
+  const { filmInfo: { release: { date: dateA } } } = filmA;
+  const { filmInfo: { release: { date: dateB } } } = filmB;
   const weight = getWeightForNullDate(dateA, dateB);
 
   if (weight !== null) {
@@ -47,8 +47,8 @@ const sortFilmDateUp = (filmA, filmB) => {
 };
 
 const sortFilmDateDown = (filmA, filmB) => {
-  const { film_info: { release: { date: dateA } } } = filmA;
-  const { film_info: { release: { date: dateB } } } = filmB;
+  const { filmInfo: { release: { date: dateA } } } = filmA;
+  const { filmInfo: { release: { date: dateB } } } = filmB;
   const weight = getWeightForNullDate(dateA, dateB);
 
   if (weight !== null) {
@@ -59,14 +59,14 @@ const sortFilmDateDown = (filmA, filmB) => {
 };
 
 const sortFilmRatingUp = (filmA, filmB) => {
-  const { film_info: { rating: ratingA } } = filmA;
-  const { film_info: { rating: ratingB } } = filmB;
+  const { filmInfo: { rating: ratingA } } = filmA;
+  const { filmInfo: { rating: ratingB } } = filmB;
   return ratingA - ratingB;
 };
 
 const sortFilmRatingDown = (filmA, filmB) => {
-  const { film_info: { rating: ratingA } } = filmA;
-  const { film_info: { rating: ratingB } } = filmB;
+  const { filmInfo: { rating: ratingA } } = filmA;
+  const { filmInfo: { rating: ratingB } } = filmB;
   return ratingB - ratingA;
 };
 

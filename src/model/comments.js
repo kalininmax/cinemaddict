@@ -23,8 +23,10 @@ class Comments extends Observer {
     this._notify(updateType, update);
   }
 
-  deleteComment(updateType, update) {
-    const index = this._comments.findIndex((comment) => comment.id === update.id);
+  deleteComment(updateType, commentId) {
+    const index = this._comments.findIndex((comment) => {
+      return comment.id === commentId;
+    });
 
     if (index === -1) {
       throw new Error('Can\'t delete unexisting comment');

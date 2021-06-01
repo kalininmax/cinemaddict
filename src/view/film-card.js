@@ -21,8 +21,10 @@ class FilmCard extends AbstractView {
 
   getTemplate() {
     const { comments,
-      film_info: { title, rating, poster, runtime, genres, description, release: { date } },
-      user_details: { watchlist, watched, favorite } } = this._film;
+      filmInfo: { title, rating, poster, runtime, genres, description, release: { date } },
+      userDetails: { watchlist, watched, favorite } } = this._film;
+    const filmGenres = genres.join(', ');
+
     const watchlistClass = watchlist ? 'film-card__controls-item--active' : '';
     const watchedClass = watched ? 'film-card__controls-item--active' : '';
     const favoriteClass = favorite ? 'film-card__controls-item--active' : '';
@@ -34,7 +36,7 @@ class FilmCard extends AbstractView {
       <p class="film-card__info">
         <span class="film-card__year">${releaseYear}</span>
         <span class="film-card__duration">${getHourFromMin(runtime).hours}h ${getHourFromMin(runtime).mins}m</span>
-        <span class="film-card__genre">${genres}</span>
+        <span class="film-card__genre">${filmGenres}</span>
       </p>
       <img src="${poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${cutDesctiption(description)}</p>
@@ -62,7 +64,6 @@ class FilmCard extends AbstractView {
   _watchListClickHandler(evt) {
     evt.preventDefault();
     this._callback.watchListClick();
-
   }
 
   setWatchListClickHandler(callback) {
@@ -73,7 +74,6 @@ class FilmCard extends AbstractView {
   _watchedClickHandler(evt) {
     evt.preventDefault();
     this._callback.watchedClick();
-
   }
 
   setWatchedClickHandler(callback) {
@@ -84,7 +84,6 @@ class FilmCard extends AbstractView {
   _favoriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.favoriteClick();
-
   }
 
   setFavoriteClickHandler(callback) {

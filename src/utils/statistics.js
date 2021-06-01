@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { RankScore, RankName } from '../const';
 
 const CHART_BAR = {
   TYPE: 'horizontalBar',
@@ -13,19 +14,31 @@ const CHART_BAR = {
 };
 
 const filmsToFilterMap = {
-  'all-time': (films) => films.filter(({ user_details: { watched } }) => watched),
-  today: (films) => films
-    .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().subtract(1, 'day')),
-  week: (films) => films
-    .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().subtract(7, 'day')),
-  month: (films) => films
-    .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().subtract(30, 'day')),
-  year: (films) => films
-    .filter(({ user_details: { watched } }) => watched)
-    .filter(({ user_details: { watchingDate } }) => watchingDate > dayjs().subtract(365, 'day')),
+  'all-time': (films) => {
+    return films.filter(({ userDetails: { watched } }) => {
+      return watched;
+    });
+  },
+  today: (films) => {
+    return films.filter(({ userDetails: { watchingDate } }) => {
+      return new Date(watchingDate) > dayjs().subtract(1, 'day');
+    });
+  },
+  week: (films) => {
+    return films.filter(({ userDetails: { watchingDate } }) => {
+      return new Date(watchingDate) > dayjs().subtract(7, 'day');
+    });
+  },
+  month: (films) => {
+    return films.filter(({ userDetails: { watchingDate } }) => {
+      return new Date(watchingDate) > dayjs().subtract(30, 'day');
+    });
+  },
+  year: (films) => {
+    return films.filter(({ userDetails: { watchingDate } }) => {
+      return new Date(watchingDate) > dayjs().subtract(365, 'day');
+    });
+  },
 };
 
 const getTotalDuration = (films) => {
@@ -34,15 +47,19 @@ const getTotalDuration = (films) => {
   }
 
   return films
-    .map(({ film_info: { runtime } }) => runtime)
-    .reduce((a, b) => a + b, 0);
+    .map(({ filmInfo: { runtime } }) => {
+      return runtime;
+    })
+    .reduce((a, b) => {
+      return a + b;
+    }, 0);
 };
 
 const getGenresStatistics = (films) => {
   const genresStatistics = {};
 
   films
-    .reduce((acc, film) => acc.concat(film.film_info.genres), [])
+    .reduce((acc, film) => acc.concat(film.filmInfo.genres), [])
     .forEach((genre) => {
       if (genresStatistics[genre]) {
         genresStatistics[genre]++;
@@ -60,9 +77,34 @@ const getTopGenre = (films) => {
   }
 
   const genresStatistics = getGenresStatistics(films);
-  const topGenreStatistics = Object.entries(genresStatistics).sort((a, b) => b[1] - a[1])[0];
+  const topGenreStatistics = Object.entries(genresStatistics).sort((a, b) => {
+    return b[1] - a[1];
+  })[0];
+
   const topGenreName = topGenreStatistics[0];
   return topGenreName;
+};
+
+const getUserRank = (films) => {
+  const watchedFilmsCount = films.filter((film) => {
+    return film.userDetails.watched;
+  }).length;
+
+  if (!watchedFilmsCount) {
+    return false;
+  }
+
+  if (watchedFilmsCount >= RankScore.NOVICE.MIN && watchedFilmsCount <= RankScore.NOVICE.MAX) {
+    return RankName.NOVICE;
+  }
+
+  if (watchedFilmsCount >= RankScore.FAN.MIN && watchedFilmsCount <= RankScore.FAN.MAX) {
+    return RankName.FAN;
+  }
+
+  if (watchedFilmsCount > RankScore.FAN.MAX) {
+    return RankName.MOVIE_BUFF;
+  }
 };
 
 export {
@@ -70,5 +112,6 @@ export {
   getTotalDuration,
   getGenresStatistics,
   getTopGenre,
+  getUserRank,
   CHART_BAR
 };

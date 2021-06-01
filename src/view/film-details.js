@@ -271,6 +271,7 @@ class FilmDetails extends SmartView {
     if ((evt.ctrlKey || evt.metaKey) && evt.code === 'Enter') {
       if (this._data.comment && this._data.emotion) {
         this._callback.commentSubmit(this._film.id, this._data);
+        document.removeEventListener('keyup', this._commentSubmitHandler);
       } else {
         commentTextarea.setCustomValidity(ErrorMessage.COMMENT);
         commentTextarea.reportValidity();

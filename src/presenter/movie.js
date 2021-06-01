@@ -18,7 +18,7 @@ class Movie {
 
     this._showDetails = this._showDetails.bind(this);
     this._hideDetails = this._hideDetails.bind(this);
-    this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._EscKeyDownHandler = this._EscKeyDownHandler.bind(this);
     this._renderPopup = this._renderPopup.bind(this);
 
     this._handleWatchListClick = this._handleWatchListClick.bind(this);
@@ -249,7 +249,7 @@ class Movie {
     this._filmDetailsComponent = new FilmDetailsView(this._film, comments);
     render(document.body, this._filmDetailsComponent, RenderPosition.BEFOREEND);
     document.body.classList.add('hide-overflow');
-    document.addEventListener('keydown', this._onEscKeyDown);
+    document.addEventListener('keydown', this._EscKeyDownHandler);
     this._setFilmDetailsClickHandlers();
   }
 
@@ -260,11 +260,11 @@ class Movie {
     document.body.classList.remove('hide-overflow');
   }
 
-  _onEscKeyDown(evt) {
+  _EscKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this._hideDetails();
-      document.removeEventListener('keydown', this._onEscKeyDown);
+      document.removeEventListener('keydown', this._EscKeyDownHandler);
     }
   }
 }

@@ -268,7 +268,7 @@ class FilmDetails extends SmartView {
     const commentForm = this.getElement().querySelector('form');
     const commentTextarea = commentForm.elements['comment'];
 
-    if ((evt.ctrlKey || evt.metaKey) && evt.code === 'Enter') {
+    if ((evt.ctrlKey || evt.key === 'Meta') && evt.code === 'Enter') {
       if (this._data.comment && this._data.emotion) {
         this._callback.commentSubmit(this._film.id, this._data);
         document.removeEventListener('keyup', this._commentSubmitHandler);

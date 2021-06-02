@@ -268,10 +268,10 @@ class FilmDetails extends SmartView {
     const commentForm = this.getElement().querySelector('form');
     const commentTextarea = commentForm.elements['comment'];
 
-    if ((evt.ctrlKey || evt.key === 'Meta') && evt.code === 'Enter') {
+    if ((evt.ctrlKey || evt.metaKey) && evt.code === 'Enter') {
       if (this._data.comment && this._data.emotion) {
         this._callback.commentSubmit(this._film.id, this._data);
-        document.removeEventListener('keyup', this._commentSubmitHandler);
+        document.removeEventListener('keydown', this._commentSubmitHandler);
       } else {
         commentTextarea.setCustomValidity(ErrorMessage.COMMENT);
         commentTextarea.reportValidity();
@@ -281,7 +281,7 @@ class FilmDetails extends SmartView {
 
   setCommentSubmitHandler(callback) {
     this._callback.commentSubmit = callback;
-    document.addEventListener('keyup', this._commentSubmitHandler);
+    document.addEventListener('keydown', this._commentSubmitHandler);
   }
 
   toggleCommentFormDisable() {
